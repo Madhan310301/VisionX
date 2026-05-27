@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export * from './apiError';
@@ -13,6 +13,7 @@ export * from './brailleProcessInput';
 export * from './brailleProcessInputMode';
 export * from './brailleProcessResult';
 export * from './brailleRegion';
+export * from './brailleSystem';
 export * from './healthStatus';
 export * from './listScansParams';
 export * from './scan';
@@ -21,6 +22,7 @@ export * from './scanInputMode';
 export * from './scanMode';
 export * from './scanStats';
 export * from './scanStatsByMode';
+export * from './scanStatsBySystem';
 export * from './ttsInput';
 export * from './ttsInputVoice';
 export * from './ttsResult';

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import {
   useMutation,
@@ -55,7 +55,6 @@ export const getHealthCheckUrl = () => {
 }
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const healthCheck = async ( options?: RequestInit): Promise<HealthStatus> => {
@@ -133,7 +132,7 @@ export const getProcessBrailleImageUrl = () => {
 }
 
 /**
- * Accepts a base64-encoded image and returns decoded Braille text with confidence scores
+ * Classifies the Braille system then decodes with specialized rules
  * @summary Process a Braille image or video frame
  */
 export const processBrailleImage = async (brailleProcessInput: BrailleProcessInput, options?: RequestInit): Promise<BrailleProcessResult> => {
@@ -205,7 +204,7 @@ export const getCorrectBrailleTextUrl = () => {
 }
 
 /**
- * @summary Apply grammar and language correction to raw decoded Braille text
+ * @summary Correct raw decoded Braille text using system-aware rules
  */
 export const correctBrailleText = async (brailleCorrectionInput: BrailleCorrectionInput, options?: RequestInit): Promise<BrailleCorrectionResult> => {
 
@@ -254,7 +253,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CorrectBrailleTextMutationError = ErrorType<ApiError>
 
     /**
- * @summary Apply grammar and language correction to raw decoded Braille text
+ * @summary Correct raw decoded Braille text using system-aware rules
  */
 export const useCorrectBrailleText = <TError = ErrorType<ApiError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof correctBrailleText>>, TError,{data: BodyType<BrailleCorrectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -431,7 +430,7 @@ export const getCreateScanUrl = () => {
 }
 
 /**
- * @summary Save a completed scan result
+ * @summary Save a completed scan to history
  */
 export const createScan = async (scanInput: ScanInput, options?: RequestInit): Promise<Scan> => {
 
@@ -480,7 +479,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CreateScanMutationError = ErrorType<unknown>
 
     /**
- * @summary Save a completed scan result
+ * @summary Save a completed scan to history
  */
 export const useCreateScan = <TError = ErrorType<unknown>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createScan>>, TError,{data: BodyType<ScanInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -492,6 +491,83 @@ export const useCreateScan = <TError = ErrorType<unknown>,
       > => {
       return useMutation(getCreateScanMutationOptions(options));
     }
+
+export const getGetScanStatsUrl = () => {
+
+
+
+
+  return `/api/scans/stats`
+}
+
+/**
+ * @summary Get aggregate scan statistics
+ */
+export const getScanStats = async ( options?: RequestInit): Promise<ScanStats> => {
+
+  return customFetch<ScanStats>(getGetScanStatsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetScanStatsQueryKey = () => {
+    return [
+    `/api/scans/stats`
+    ] as const;
+    }
+
+
+export const getGetScanStatsQueryOptions = <TData = Awaited<ReturnType<typeof getScanStats>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetScanStatsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getScanStats>>> = ({ signal }) => getScanStats({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetScanStatsQueryResult = NonNullable<Awaited<ReturnType<typeof getScanStats>>>
+export type GetScanStatsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get aggregate scan statistics
+ */
+
+export function useGetScanStats<TData = Awaited<ReturnType<typeof getScanStats>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetScanStatsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetScanUrl = (id: number,) => {
 
@@ -579,7 +655,7 @@ export const getDeleteScanUrl = (id: number,) => {
 }
 
 /**
- * @summary Delete a scan
+ * @summary Delete a scan from history
  */
 export const deleteScan = async (id: number, options?: RequestInit): Promise<void> => {
 
@@ -627,7 +703,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type DeleteScanMutationError = ErrorType<ApiError>
 
     /**
- * @summary Delete a scan
+ * @summary Delete a scan from history
  */
 export const useDeleteScan = <TError = ErrorType<ApiError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteScan>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -639,81 +715,4 @@ export const useDeleteScan = <TError = ErrorType<ApiError>,
       > => {
       return useMutation(getDeleteScanMutationOptions(options));
     }
-
-export const getGetScanStatsUrl = () => {
-
-
-
-
-  return `/api/scans/stats`
-}
-
-/**
- * @summary Get aggregate scan statistics
- */
-export const getScanStats = async ( options?: RequestInit): Promise<ScanStats> => {
-
-  return customFetch<ScanStats>(getGetScanStatsUrl(),
-  {
-    ...options,
-    method: 'GET'
-
-
-  }
-);}
-
-
-
-
-
-export const getGetScanStatsQueryKey = () => {
-    return [
-    `/api/scans/stats`
-    ] as const;
-    }
-
-
-export const getGetScanStatsQueryOptions = <TData = Awaited<ReturnType<typeof getScanStats>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-) => {
-
-const {query: queryOptions, request: requestOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getGetScanStatsQueryKey();
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getScanStats>>> = ({ signal }) => getScanStats({ signal, ...requestOptions });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData> & { queryKey: QueryKey }
-}
-
-export type GetScanStatsQueryResult = NonNullable<Awaited<ReturnType<typeof getScanStats>>>
-export type GetScanStatsQueryError = ErrorType<unknown>
-
-
-/**
- * @summary Get aggregate scan statistics
- */
-
-export function useGetScanStats<TData = Awaited<ReturnType<typeof getScanStats>>, TError = ErrorType<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getScanStats>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
-
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
-
-  const queryOptions = getGetScanStatsQueryOptions(options)
-
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
-
-  return { ...query, queryKey: queryOptions.queryKey };
-}
-
-
-
-
-
-
 

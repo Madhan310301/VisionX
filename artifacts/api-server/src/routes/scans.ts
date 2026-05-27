@@ -23,6 +23,11 @@ router.get("/scans/stats", async (_req, res): Promise<void> => {
     .from(scansTable)
     .groupBy(scansTable.mode);
 
+  const bySystemRows = await db
+    .select({ system: scansTable.brailleSystem, cnt: count(scansTable.id) })
+    .from(scansTable)
+    .groupBy(scansTable.brailleSystem);
+
   const byMode = { camera: 0, upload: 0, video: 0 };
   for (const row of byModeRows) {
     if (row.mode === "camera") byMode.camera = Number(row.cnt);
@@ -30,10 +35,23 @@ router.get("/scans/stats", async (_req, res): Promise<void> => {
     else if (row.mode === "video") byMode.video = Number(row.cnt);
   }
 
+  const bySystem: Record<string, number> = {
+    ueb_grade1: 0,
+    ueb_grade2: 0,
+    nemeth: 0,
+    computer: 0,
+    music: 0,
+    unknown: 0,
+  };
+  for (const row of bySystemRows) {
+    if (row.system) bySystem[row.system] = Number(row.cnt);
+  }
+
   res.json({
     totalScans: Number(rows[0]?.totalScans ?? 0),
     avgConfidence: Number(rows[0]?.avgConfidence ?? 0),
     byMode,
+    bySystem,
   });
 });
 

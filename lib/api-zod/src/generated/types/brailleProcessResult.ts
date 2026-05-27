@@ -3,18 +3,21 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { BrailleRegion } from './brailleRegion';
+import type { BrailleSystem } from './brailleSystem';
 
 export interface BrailleProcessResult {
-  /** Raw decoded Braille text */
   rawText: string;
-  /** Overall confidence score 0-1 */
   confidence: number;
+  brailleSystem: BrailleSystem;
+  /** Confidence in the system classification 0-1 */
+  systemConfidence: number;
+  /** Brief explanation of why this system was detected */
+  systemReasoning?: string;
   regions: BrailleRegion[];
   lineCount: number;
   processingMs: number;
-  /** Quality warnings (blur, low-contrast, etc.) */
   warnings?: string[];
 }

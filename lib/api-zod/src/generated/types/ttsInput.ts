@@ -3,12 +3,11 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { TtsInputVoice } from './ttsInputVoice';
 
 export interface TtsInput {
   text: string;
-  /** Voice to use for TTS */
   voice?: TtsInputVoice;
 }

@@ -3,13 +3,12 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from 'zod';
 
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -18,41 +17,45 @@ export const HealthCheckResponse = zod.object({
 
 
 /**
- * Accepts a base64-encoded image and returns decoded Braille text with confidence scores
+ * Classifies the Braille system then decodes with specialized rules
  * @summary Process a Braille image or video frame
  */
 export const ProcessBrailleImageBody = zod.object({
   "imageBase64": zod.string().describe('Base64-encoded image data'),
-  "mimeType": zod.string().describe('MIME type of the image (image\/jpeg, image\/png, etc.)'),
-  "mode": zod.enum(['camera', 'upload', 'video']).optional().describe('Input mode for contextual processing')
+  "mimeType": zod.string().describe('MIME type (image\/jpeg, image\/png, etc.)'),
+  "mode": zod.enum(['camera', 'upload', 'video']).optional()
 })
 
 export const ProcessBrailleImageResponse = zod.object({
-  "rawText": zod.string().describe('Raw decoded Braille text'),
-  "confidence": zod.number().describe('Overall confidence score 0-1'),
+  "rawText": zod.string(),
+  "confidence": zod.number(),
+  "brailleSystem": zod.enum(['ueb_grade1', 'ueb_grade2', 'nemeth', 'computer', 'music', 'unknown']).describe('The classified Braille system detected in the image.\nueb_grade1: Grade 1 — direct letter-by-letter.\nueb_grade2: Grade 2 (contracted) — uses contractions like \"the\", \"and\", \"ing\". Used in USA, UK, Canada, Australia, India.\nnemeth: Nemeth Code for math, equations, and scientific notation.\ncomputer: Computer Braille for code, symbols, and programming characters.\nmusic: Music Braille for musical notation.\nunknown: Could not confidently classify.\n'),
+  "systemConfidence": zod.number().describe('Confidence in the system classification 0-1'),
+  "systemReasoning": zod.string().optional().describe('Brief explanation of why this system was detected'),
   "regions": zod.array(zod.object({
   "x": zod.number(),
   "y": zod.number(),
   "width": zod.number(),
   "height": zod.number(),
-  "confidence": zod.number().describe('Confidence score 0-1')
+  "confidence": zod.number()
 })),
   "lineCount": zod.number(),
   "processingMs": zod.number(),
-  "warnings": zod.array(zod.string()).optional().describe('Quality warnings (blur, low-contrast, etc.)')
+  "warnings": zod.array(zod.string()).optional()
 })
 
 
 /**
- * @summary Apply grammar and language correction to raw decoded Braille text
+ * @summary Correct raw decoded Braille text using system-aware rules
  */
 export const CorrectBrailleTextBody = zod.object({
-  "rawText": zod.string().describe('Raw decoded Braille text to correct')
+  "rawText": zod.string(),
+  "brailleSystem": zod.enum(['ueb_grade1', 'ueb_grade2', 'nemeth', 'computer', 'music', 'unknown']).optional().describe('The classified Braille system detected in the image.\nueb_grade1: Grade 1 — direct letter-by-letter.\nueb_grade2: Grade 2 (contracted) — uses contractions like \"the\", \"and\", \"ing\". Used in USA, UK, Canada, Australia, India.\nnemeth: Nemeth Code for math, equations, and scientific notation.\ncomputer: Computer Braille for code, symbols, and programming characters.\nmusic: Music Braille for musical notation.\nunknown: Could not confidently classify.\n')
 })
 
 export const CorrectBrailleTextResponse = zod.object({
   "correctedText": zod.string(),
-  "changesApplied": zod.number().describe('Number of corrections applied')
+  "changesApplied": zod.number()
 })
 
 
@@ -61,11 +64,11 @@ export const CorrectBrailleTextResponse = zod.object({
  */
 export const SynthesizeSpeechBody = zod.object({
   "text": zod.string(),
-  "voice": zod.enum(['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']).optional().describe('Voice to use for TTS')
+  "voice": zod.enum(['alloy', 'echo', 'fable', 'onyx', 'nova', 'shimmer']).optional()
 })
 
 export const SynthesizeSpeechResponse = zod.object({
-  "audioBase64": zod.string().describe('Base64-encoded MP3 audio'),
+  "audioBase64": zod.string(),
   "format": zod.string()
 })
 
@@ -73,8 +76,13 @@ export const SynthesizeSpeechResponse = zod.object({
 /**
  * @summary List recent scans
  */
+export const listScansQueryLimitDefault = 30;
+export const listScansQueryLimitMax = 100;
+
+
+
 export const ListScansQueryParams = zod.object({
-  "limit": zod.coerce.number().optional()
+  "limit": zod.coerce.number().min(1).max(listScansQueryLimitMax).default(listScansQueryLimitDefault)
 })
 
 export const ListScansResponseItem = zod.object({
@@ -85,20 +93,44 @@ export const ListScansResponseItem = zod.object({
   "correctedText": zod.string(),
   "confidence": zod.number(),
   "lineCount": zod.number().nullish(),
+  "brailleSystem": zod.union([zod.enum(['ueb_grade1', 'ueb_grade2', 'nemeth', 'computer', 'music', 'unknown']).describe('The classified Braille system detected in the image.\nueb_grade1: Grade 1 — direct letter-by-letter.\nueb_grade2: Grade 2 (contracted) — uses contractions like \"the\", \"and\", \"ing\". Used in USA, UK, Canada, Australia, India.\nnemeth: Nemeth Code for math, equations, and scientific notation.\ncomputer: Computer Braille for code, symbols, and programming characters.\nmusic: Music Braille for musical notation.\nunknown: Could not confidently classify.\n'),zod.null()]).optional(),
   "exportedAt": zod.coerce.date().nullish()
 })
 export const ListScansResponse = zod.array(ListScansResponseItem)
 
 
 /**
- * @summary Save a completed scan result
+ * @summary Save a completed scan to history
  */
 export const CreateScanBody = zod.object({
   "mode": zod.enum(['camera', 'upload', 'video']),
   "rawText": zod.string(),
   "correctedText": zod.string(),
   "confidence": zod.number(),
-  "lineCount": zod.number().nullish()
+  "lineCount": zod.number().nullish(),
+  "brailleSystem": zod.union([zod.enum(['ueb_grade1', 'ueb_grade2', 'nemeth', 'computer', 'music', 'unknown']).describe('The classified Braille system detected in the image.\nueb_grade1: Grade 1 — direct letter-by-letter.\nueb_grade2: Grade 2 (contracted) — uses contractions like \"the\", \"and\", \"ing\". Used in USA, UK, Canada, Australia, India.\nnemeth: Nemeth Code for math, equations, and scientific notation.\ncomputer: Computer Braille for code, symbols, and programming characters.\nmusic: Music Braille for musical notation.\nunknown: Could not confidently classify.\n'),zod.null()]).optional()
+})
+
+
+/**
+ * @summary Get aggregate scan statistics
+ */
+export const GetScanStatsResponse = zod.object({
+  "totalScans": zod.number(),
+  "avgConfidence": zod.number(),
+  "byMode": zod.object({
+  "camera": zod.number().optional(),
+  "upload": zod.number().optional(),
+  "video": zod.number().optional()
+}),
+  "bySystem": zod.object({
+  "ueb_grade1": zod.number().optional(),
+  "ueb_grade2": zod.number().optional(),
+  "nemeth": zod.number().optional(),
+  "computer": zod.number().optional(),
+  "music": zod.number().optional(),
+  "unknown": zod.number().optional()
+}).optional()
 })
 
 
@@ -117,29 +149,16 @@ export const GetScanResponse = zod.object({
   "correctedText": zod.string(),
   "confidence": zod.number(),
   "lineCount": zod.number().nullish(),
+  "brailleSystem": zod.union([zod.enum(['ueb_grade1', 'ueb_grade2', 'nemeth', 'computer', 'music', 'unknown']).describe('The classified Braille system detected in the image.\nueb_grade1: Grade 1 — direct letter-by-letter.\nueb_grade2: Grade 2 (contracted) — uses contractions like \"the\", \"and\", \"ing\". Used in USA, UK, Canada, Australia, India.\nnemeth: Nemeth Code for math, equations, and scientific notation.\ncomputer: Computer Braille for code, symbols, and programming characters.\nmusic: Music Braille for musical notation.\nunknown: Could not confidently classify.\n'),zod.null()]).optional(),
   "exportedAt": zod.coerce.date().nullish()
 })
 
 
 /**
- * @summary Delete a scan
+ * @summary Delete a scan from history
  */
 export const DeleteScanParams = zod.object({
   "id": zod.coerce.number()
-})
-
-
-/**
- * @summary Get aggregate scan statistics
- */
-export const GetScanStatsResponse = zod.object({
-  "totalScans": zod.number(),
-  "avgConfidence": zod.number(),
-  "byMode": zod.object({
-  "camera": zod.number().optional(),
-  "upload": zod.number().optional(),
-  "video": zod.number().optional()
-})
 })
 
 

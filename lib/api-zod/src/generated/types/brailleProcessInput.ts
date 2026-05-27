@@ -3,15 +3,14 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { BrailleProcessInputMode } from './brailleProcessInputMode';
 
 export interface BrailleProcessInput {
   /** Base64-encoded image data */
   imageBase64: string;
-  /** MIME type of the image (image/jpeg, image/png, etc.) */
+  /** MIME type (image/jpeg, image/png, etc.) */
   mimeType: string;
-  /** Input mode for contextual processing */
   mode?: BrailleProcessInputMode;
 }

@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: BrailleVision API specification
 servers:
   - url: /api
@@ -22,7 +22,6 @@ paths:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -36,7 +35,7 @@ paths:
       operationId: processBrailleImage
       tags: [braille]
       summary: Process a Braille image or video frame
-      description: Accepts a base64-encoded image and returns decoded Braille text with confidence scores
+      description: Classifies the Braille system then decodes with specialized rules
       requestBody:
         required: true
         content:
@@ -61,7 +60,7 @@ paths:
     post:
       operationId: correctBrailleText
       tags: [braille]
-      summary: Apply grammar and language correction to raw decoded Braille text
+      summary: Correct raw decoded Braille text using system-aware rules
       requestBody:
         required: true
         content:
@@ -118,19 +117,23 @@ paths:
           required: false
           schema:
             type: integer
+            minimum: 1
+            maximum: 100
+            default: 30
       responses:
         "200":
-          description: List of recent scans
+          description: List of scans
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Scan"
+
     post:
       operationId: createScan
       tags: [scans]
-      summary: Save a completed scan result
+      summary: Save a completed scan to history
       requestBody:
         required: true
         content:
@@ -145,50 +148,6 @@ paths:
               schema:
                 $ref: "#/components/schemas/Scan"
 
-  /scans/{id}:
-    get:
-      operationId: getScan
-      tags: [scans]
-      summary: Get a specific scan by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "200":
-          description: Scan details
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Scan"
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiError"
-    delete:
-      operationId: deleteScan
-      tags: [scans]
-      summary: Delete a scan
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        "204":
-          description: Deleted
-        "404":
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiError"
-
   /scans/stats:
     get:
       operationId: getScanStats
@@ -202,6 +161,51 @@ paths:
               schema:
                 $ref: "#/components/schemas/ScanStats"
 
+  /scans/{id}:
+    get:
+      operationId: getScan
+      tags: [scans]
+      summary: Get a specific scan by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scan record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+    delete:
+      operationId: deleteScan
+      tags: [scans]
+      summary: Delete a scan from history
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 components:
   schemas:
     HealthStatus:
@@ -211,6 +215,24 @@ components:
           type: string
       required:
         - status
+
+    BrailleSystem:
+      type: string
+      description: |
+        The classified Braille system detected in the image.
+        ueb_grade1: Grade 1 — direct letter-by-letter.
+        ueb_grade2: Grade 2 (contracted) — uses contractions like "the", "and", "ing". Used in USA, UK, Canada, Australia, India.
+        nemeth: Nemeth Code for math, equations, and scientific notation.
+        computer: Computer Braille for code, symbols, and programming characters.
+        music: Music Braille for musical notation.
+        unknown: Could not confidently classify.
+      enum:
+        - ueb_grade1
+        - ueb_grade2
+        - nemeth
+        - computer
+        - music
+        - unknown
 
     BrailleProcessInput:
       type: object
@@ -223,20 +245,14 @@ components:
           description: Base64-encoded image data
         mimeType:
           type: string
-          description: MIME type of the image (image/jpeg, image/png, etc.)
+          description: MIME type (image/jpeg, image/png, etc.)
         mode:
           type: string
           enum: [camera, upload, video]
-          description: Input mode for contextual processing
 
     BrailleRegion:
       type: object
-      required:
-        - x
-        - y
-        - width
-        - height
-        - confidence
+      required: [x, y, width, height, confidence]
       properties:
         x:
           type: number
@@ -248,7 +264,6 @@ components:
           type: number
         confidence:
           type: number
-          description: Confidence score 0-1
 
     BrailleProcessResult:
       type: object
@@ -258,13 +273,21 @@ components:
         - regions
         - lineCount
         - processingMs
+        - brailleSystem
+        - systemConfidence
       properties:
         rawText:
           type: string
-          description: Raw decoded Braille text
         confidence:
           type: number
-          description: Overall confidence score 0-1
+        brailleSystem:
+          $ref: "#/components/schemas/BrailleSystem"
+        systemConfidence:
+          type: number
+          description: Confidence in the system classification 0-1
+        systemReasoning:
+          type: string
+          description: Brief explanation of why this system was detected
         regions:
           type: array
           items:
@@ -277,7 +300,6 @@ components:
           type: array
           items:
             type: string
-          description: Quality warnings (blur, low-contrast, etc.)
 
     BrailleCorrectionInput:
       type: object
@@ -286,7 +308,8 @@ components:
       properties:
         rawText:
           type: string
-          description: Raw decoded Braille text to correct
+        brailleSystem:
+          $ref: "#/components/schemas/BrailleSystem"
 
     BrailleCorrectionResult:
       type: object
@@ -298,7 +321,6 @@ components:
           type: string
         changesApplied:
           type: integer
-          description: Number of corrections applied
 
     TtsInput:
       type: object
@@ -310,7 +332,6 @@ components:
         voice:
           type: string
           enum: [alloy, echo, fable, onyx, nova, shimmer]
-          description: Voice to use for TTS
 
     TtsResult:
       type: object
@@ -320,7 +341,6 @@ components:
       properties:
         audioBase64:
           type: string
-          description: Base64-encoded MP3 audio
         format:
           type: string
 
@@ -350,6 +370,10 @@ components:
           type: number
         lineCount:
           type: ["integer", "null"]
+        brailleSystem:
+          oneOf:
+            - $ref: "#/components/schemas/BrailleSystem"
+            - type: "null"
         exportedAt:
           type: ["string", "null"]
           format: date-time
@@ -373,6 +397,10 @@ components:
           type: number
         lineCount:
           type: ["integer", "null"]
+        brailleSystem:
+          oneOf:
+            - $ref: "#/components/schemas/BrailleSystem"
+            - type: "null"
 
     ScanStats:
       type: object
@@ -393,6 +421,21 @@ components:
             upload:
               type: integer
             video:
+              type: integer
+        bySystem:
+          type: object
+          properties:
+            ueb_grade1:
+              type: integer
+            ueb_grade2:
+              type: integer
+            nemeth:
+              type: integer
+            computer:
+              type: integer
+            music:
+              type: integer
+            unknown:
               type: integer
 
     ApiError:

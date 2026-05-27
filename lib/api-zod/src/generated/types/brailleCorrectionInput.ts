@@ -3,10 +3,11 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
+import type { BrailleSystem } from './brailleSystem';
 
 export interface BrailleCorrectionInput {
-  /** Raw decoded Braille text to correct */
   rawText: string;
+  brailleSystem?: BrailleSystem;
 }

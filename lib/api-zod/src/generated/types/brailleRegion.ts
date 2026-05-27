@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export interface BrailleRegion {
@@ -11,6 +11,5 @@ export interface BrailleRegion {
   y: number;
   width: number;
   height: number;
-  /** Confidence score 0-1 */
   confidence: number;
 }

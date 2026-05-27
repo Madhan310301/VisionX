@@ -3,15 +3,34 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
 }
 
 /**
- * Input mode for contextual processing
+ * The classified Braille system detected in the image.
+ueb_grade1: Grade 1 — direct letter-by-letter.
+ueb_grade2: Grade 2 (contracted) — uses contractions like "the", "and", "ing". Used in USA, UK, Canada, Australia, India.
+nemeth: Nemeth Code for math, equations, and scientific notation.
+computer: Computer Braille for code, symbols, and programming characters.
+music: Music Braille for musical notation.
+unknown: Could not confidently classify.
+
  */
+export type BrailleSystem = typeof BrailleSystem[keyof typeof BrailleSystem];
+
+
+export const BrailleSystem = {
+  ueb_grade1: 'ueb_grade1',
+  ueb_grade2: 'ueb_grade2',
+  nemeth: 'nemeth',
+  computer: 'computer',
+  music: 'music',
+  unknown: 'unknown',
+} as const;
+
 export type BrailleProcessInputMode = typeof BrailleProcessInputMode[keyof typeof BrailleProcessInputMode];
 
 
@@ -24,9 +43,8 @@ export const BrailleProcessInputMode = {
 export interface BrailleProcessInput {
   /** Base64-encoded image data */
   imageBase64: string;
-  /** MIME type of the image (image/jpeg, image/png, etc.) */
+  /** MIME type (image/jpeg, image/png, etc.) */
   mimeType: string;
-  /** Input mode for contextual processing */
   mode?: BrailleProcessInputMode;
 }
 
@@ -35,36 +53,33 @@ export interface BrailleRegion {
   y: number;
   width: number;
   height: number;
-  /** Confidence score 0-1 */
   confidence: number;
 }
 
 export interface BrailleProcessResult {
-  /** Raw decoded Braille text */
   rawText: string;
-  /** Overall confidence score 0-1 */
   confidence: number;
+  brailleSystem: BrailleSystem;
+  /** Confidence in the system classification 0-1 */
+  systemConfidence: number;
+  /** Brief explanation of why this system was detected */
+  systemReasoning?: string;
   regions: BrailleRegion[];
   lineCount: number;
   processingMs: number;
-  /** Quality warnings (blur, low-contrast, etc.) */
   warnings?: string[];
 }
 
 export interface BrailleCorrectionInput {
-  /** Raw decoded Braille text to correct */
   rawText: string;
+  brailleSystem?: BrailleSystem;
 }
 
 export interface BrailleCorrectionResult {
   correctedText: string;
-  /** Number of corrections applied */
   changesApplied: number;
 }
 
-/**
- * Voice to use for TTS
- */
 export type TtsInputVoice = typeof TtsInputVoice[keyof typeof TtsInputVoice];
 
 
@@ -79,12 +94,10 @@ export const TtsInputVoice = {
 
 export interface TtsInput {
   text: string;
-  /** Voice to use for TTS */
   voice?: TtsInputVoice;
 }
 
 export interface TtsResult {
-  /** Base64-encoded MP3 audio */
   audioBase64: string;
   format: string;
 }
@@ -107,6 +120,7 @@ export interface Scan {
   confidence: number;
   /** @nullable */
   lineCount?: number | null;
+  brailleSystem?: BrailleSystem | null;
   /** @nullable */
   exportedAt?: string | null;
 }
@@ -127,6 +141,7 @@ export interface ScanInput {
   confidence: number;
   /** @nullable */
   lineCount?: number | null;
+  brailleSystem?: BrailleSystem | null;
 }
 
 export type ScanStatsByMode = {
@@ -135,10 +150,20 @@ export type ScanStatsByMode = {
   video?: number;
 };
 
+export type ScanStatsBySystem = {
+  ueb_grade1?: number;
+  ueb_grade2?: number;
+  nemeth?: number;
+  computer?: number;
+  music?: number;
+  unknown?: number;
+};
+
 export interface ScanStats {
   totalScans: number;
   avgConfidence: number;
   byMode: ScanStatsByMode;
+  bySystem?: ScanStatsBySystem;
 }
 
 export interface ApiError {
@@ -146,6 +171,10 @@ export interface ApiError {
 }
 
 export type ListScansParams = {
+/**
+ * @minimum 1
+ * @maximum 100
+ */
 limit?: number;
 };
 

@@ -3,12 +3,9 @@
  * Do not edit manually.
  * Api
  * BrailleVision API specification
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
-/**
- * Input mode for contextual processing
- */
 export type BrailleProcessInputMode = typeof BrailleProcessInputMode[keyof typeof BrailleProcessInputMode];
 
 
