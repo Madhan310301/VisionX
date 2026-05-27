@@ -3,13 +3,19 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: BrailleVision API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: braille
+    description: Braille processing pipeline operations
+  - name: scans
+    description: Scan history management
+  - name: tts
+    description: Text-to-speech audio generation
 paths:
   /healthz:
     get:
@@ -24,6 +30,178 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /braille/process:
+    post:
+      operationId: processBrailleImage
+      tags: [braille]
+      summary: Process a Braille image or video frame
+      description: Accepts a base64-encoded image and returns decoded Braille text with confidence scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BrailleProcessInput"
+      responses:
+        "200":
+          description: Processing result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrailleProcessResult"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /braille/correct:
+    post:
+      operationId: correctBrailleText
+      tags: [braille]
+      summary: Apply grammar and language correction to raw decoded Braille text
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BrailleCorrectionInput"
+      responses:
+        "200":
+          description: Corrected text
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BrailleCorrectionResult"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /tts/synthesize:
+    post:
+      operationId: synthesizeSpeech
+      tags: [tts]
+      summary: Convert text to speech audio (returns base64 MP3)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TtsInput"
+      responses:
+        "200":
+          description: Audio data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TtsResult"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /scans:
+    get:
+      operationId: listScans
+      tags: [scans]
+      summary: List recent scans
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of recent scans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Scan"
+    post:
+      operationId: createScan
+      tags: [scans]
+      summary: Save a completed scan result
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScanInput"
+      responses:
+        "201":
+          description: Created scan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scan"
+
+  /scans/{id}:
+    get:
+      operationId: getScan
+      tags: [scans]
+      summary: Get a specific scan by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Scan details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Scan"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      operationId: deleteScan
+      tags: [scans]
+      summary: Delete a scan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+  /scans/stats:
+    get:
+      operationId: getScanStats
+      tags: [scans]
+      summary: Get aggregate scan statistics
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScanStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +212,193 @@ components:
       required:
         - status
 
+    BrailleProcessInput:
+      type: object
+      required:
+        - imageBase64
+        - mimeType
+      properties:
+        imageBase64:
+          type: string
+          description: Base64-encoded image data
+        mimeType:
+          type: string
+          description: MIME type of the image (image/jpeg, image/png, etc.)
+        mode:
+          type: string
+          enum: [camera, upload, video]
+          description: Input mode for contextual processing
+
+    BrailleRegion:
+      type: object
+      required:
+        - x
+        - y
+        - width
+        - height
+        - confidence
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        width:
+          type: number
+        height:
+          type: number
+        confidence:
+          type: number
+          description: Confidence score 0-1
+
+    BrailleProcessResult:
+      type: object
+      required:
+        - rawText
+        - confidence
+        - regions
+        - lineCount
+        - processingMs
+      properties:
+        rawText:
+          type: string
+          description: Raw decoded Braille text
+        confidence:
+          type: number
+          description: Overall confidence score 0-1
+        regions:
+          type: array
+          items:
+            $ref: "#/components/schemas/BrailleRegion"
+        lineCount:
+          type: integer
+        processingMs:
+          type: integer
+        warnings:
+          type: array
+          items:
+            type: string
+          description: Quality warnings (blur, low-contrast, etc.)
+
+    BrailleCorrectionInput:
+      type: object
+      required:
+        - rawText
+      properties:
+        rawText:
+          type: string
+          description: Raw decoded Braille text to correct
+
+    BrailleCorrectionResult:
+      type: object
+      required:
+        - correctedText
+        - changesApplied
+      properties:
+        correctedText:
+          type: string
+        changesApplied:
+          type: integer
+          description: Number of corrections applied
+
+    TtsInput:
+      type: object
+      required:
+        - text
+      properties:
+        text:
+          type: string
+        voice:
+          type: string
+          enum: [alloy, echo, fable, onyx, nova, shimmer]
+          description: Voice to use for TTS
+
+    TtsResult:
+      type: object
+      required:
+        - audioBase64
+        - format
+      properties:
+        audioBase64:
+          type: string
+          description: Base64-encoded MP3 audio
+        format:
+          type: string
+
+    Scan:
+      type: object
+      required:
+        - id
+        - createdAt
+        - mode
+        - rawText
+        - correctedText
+        - confidence
+      properties:
+        id:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        mode:
+          type: string
+          enum: [camera, upload, video]
+        rawText:
+          type: string
+        correctedText:
+          type: string
+        confidence:
+          type: number
+        lineCount:
+          type: ["integer", "null"]
+        exportedAt:
+          type: ["string", "null"]
+          format: date-time
+
+    ScanInput:
+      type: object
+      required:
+        - mode
+        - rawText
+        - correctedText
+        - confidence
+      properties:
+        mode:
+          type: string
+          enum: [camera, upload, video]
+        rawText:
+          type: string
+        correctedText:
+          type: string
+        confidence:
+          type: number
+        lineCount:
+          type: ["integer", "null"]
+
+    ScanStats:
+      type: object
+      required:
+        - totalScans
+        - avgConfidence
+        - byMode
+      properties:
+        totalScans:
+          type: integer
+        avgConfidence:
+          type: number
+        byMode:
+          type: object
+          properties:
+            camera:
+              type: integer
+            upload:
+              type: integer
+            video:
+              type: integer
+
+    ApiError:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
