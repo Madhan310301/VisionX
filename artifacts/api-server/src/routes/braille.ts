@@ -7,33 +7,177 @@ import {
 
 const router: IRouter = Router();
 
-const SYSTEM_DECODERS: Record<string, string> = {
-  ueb_grade1: `You are decoding Grade 1 Unified English Braille (UEB). This is a direct letter-by-letter system where each Braille cell maps to exactly one character. Apply the full UEB cell table including capital indicators (⠠), number indicators (⠼), and punctuation cells. Preserve all spacing and line breaks exactly.`,
+// ─── Complete Braille reference tables embedded in the prompt ────────────────
+// These give the model ground truth to decode against instead of relying on memory.
+const BRAILLE_REFERENCE = `
+BRAILLE CELL ANATOMY
+Each Braille cell has 6 dot positions arranged in a 2×3 grid:
+  Dot 1  Dot 4
+  Dot 2  Dot 5
+  Dot 3  Dot 6
+A "raised" dot = filled circle. An "absent" dot = empty space.
+Dots are numbered 1-6. A cell is described by which dots are raised, e.g. "dots 1,2,4" = ⠋.
 
-  ueb_grade2: `You are decoding Grade 2 Unified English Braille (UEB), also called contracted Braille. This system uses shorthand contractions to represent common words and letter groups. Apply ALL standard UEB contractions including whole-word contractions (e.g., ⠮ = "the", ⠯ = "and", ⠾ = "you", ⠿ = "ble"), part-word contractions (e.g., ⠒ = "con", ⠡ = "ch", ⠩ = "sh", ⠬ = "ing"), and letter groups. Expand every contraction to its full English equivalent. Preserve paragraph breaks.`,
+GRADE 1 UEB / ENGLISH BRAILLE ALPHABET
+(dot pattern → character)
+dots 1       = a
+dots 1,2     = b
+dots 1,4     = c
+dots 1,4,5   = d
+dots 1,5     = e
+dots 1,2,4   = f
+dots 1,2,4,5 = g
+dots 1,2,5   = h
+dots 2,4     = i
+dots 2,4,5   = j
+dots 1,3     = k
+dots 1,2,3   = l
+dots 1,3,4   = m
+dots 1,3,4,5 = n
+dots 1,3,5   = o
+dots 1,2,3,4 = p
+dots 1,2,3,4,5 = q
+dots 1,2,3,5 = r
+dots 2,3,4   = s
+dots 2,3,4,5 = t
+dots 1,3,6   = u
+dots 1,2,3,6 = v
+dots 2,4,5,6 = w
+dots 1,3,4,6 = x
+dots 1,3,4,5,6 = y
+dots 1,3,5,6 = z
 
-  nemeth: `You are decoding Nemeth Braille Code for mathematics and scientific notation. Nemeth uses specialized cell mappings for numbers, operators, fractions, superscripts, subscripts, Greek letters, and mathematical symbols. Decode:
-- Numeric indicator (⠼) followed by cells → Arabic numerals
-- Superscript/subscript indicators → use proper mathematical notation (^, _)
-- Fraction indicators → format as n/d or \\frac{n}{d}
-- Operator cells → +, -, ×, ÷, =, <, >, ≤, ≥, ≠
-- Greek letter indicator → α, β, γ, π, etc.
-Output should be readable mathematical text or LaTeX-style notation where appropriate.`,
+SPECIAL INDICATORS
+dots 6       = capital indicator (next letter is uppercase)
+dots 3,4,5,6 = number indicator (⠼, next cells are digits)
+dots 2,3,5,6 = letter indicator
+dots 2,5     = decimal point / period
+dots 2,3     = comma
+dots 2,3,5   = semicolon
+dots 2,5,6   = colon
+dots 2,3,5,6 = exclamation
+dots 2,3,6   = opening quote
+dots 3,5,6   = closing quote / apostrophe
+dots 3,6     = hyphen/dash
+dots 1,4,6   = open bracket (
+dots 3,4,5   = close bracket )
+blank cell   = space between words
 
-  computer: `You are decoding Computer Braille (also called ASCII Braille or 8-dot Braille). This system is used for programming source code, command-line text, and technical symbols. Each cell maps directly to an ASCII character. Apply the computer Braille table to decode all programming symbols including brackets []{}(), operators +-*/=<>&|^~, and punctuation. Preserve whitespace, indentation, and all special characters exactly — they are significant in code.`,
+NUMBER INDICATOR MODE (after ⠼ / dots 3,4,5,6):
+dots 1       = 1
+dots 1,2     = 2
+dots 1,4     = 3
+dots 1,4,5   = 4
+dots 1,5     = 5
+dots 1,2,4   = 6
+dots 1,2,4,5 = 7
+dots 1,2,5   = 8
+dots 2,4     = 9
+dots 2,4,5   = 0
 
-  music: `You are decoding Music Braille notation. Decode:
-- Note names (A–G) from cell patterns using the Music Braille note table
-- Note values (whole, half, quarter, eighth, sixteenth) from the upper dot patterns
-- Octave indicators → specify which octave (e.g., "middle C", "C4")
-- Rest symbols → rest (whole/half/quarter/etc.)
-- Clef, time signature, key signature indicators
-- Dynamic markings (pp, p, mp, mf, f, ff)
-- Articulation marks (staccato, legato, accent)
-Output as a text description of the musical content in a readable score-like format.`,
+GRADE 2 / CONTRACTED BRAILLE — COMMON WHOLE-WORD CONTRACTIONS
+(entire cell stands for a whole word when preceded/followed by spaces)
+dots 1       = "a" (also letter a)
+dots 1,2     = "but"
+dots 1,4     = "can"
+dots 1,4,5   = "do"
+dots 1,5     = "every"
+dots 1,2,4   = "from"
+dots 1,2,4,5 = "go"
+dots 1,2,5   = "have"
+dots 2,4     = "i" (pronoun)
+dots 2,4,5   = "just"
+dots 1,3     = "knowledge"
+dots 1,2,3   = "like"
+dots 1,3,4   = "more"
+dots 1,3,4,5 = "not"
+dots 1,3,5   = "o"
+dots 1,2,3,4 = "people"
+dots 1,2,3,4,5 = "quite"
+dots 1,2,3,5 = "rather"
+dots 2,3,4   = "so"
+dots 2,3,4,5 = "that"
+dots 1,3,6   = "us"
+dots 1,2,3,6 = "very"
+dots 2,4,5,6 = "will"
+dots 1,3,4,6 = "it"
+dots 1,3,4,5,6 = "you"
+dots 1,3,5,6 = "as"
+dots 3,4,5,6 = "and"
+dots 3,4     = "still"
+dots 3,4,5   = "for"
+dots 2,3     = "his"
+dots 2,5,6   = "in"
+dots 2,3,5   = "was"
+dots 3,6     = "the"
 
-  unknown: `You are decoding Braille text of an unidentified system. Apply your best knowledge of all Braille standards (UEB Grade 1/2, Nemeth, Computer, Music) to produce the most likely accurate decoding. Flag ambiguous cells in your warnings.`,
-};
+GRADE 2 PART-WORD CONTRACTIONS (common)
+dots 2,5      = "dd"
+dots 2,5,6    = "en"
+dots 1,2,6    = "ff"
+dots 1,2,4,6  = "gg"
+dots 3,4,5,6  = "and"
+dots 1,6      = "ch"
+dots 1,4,6    = "gh"
+dots 1,2,6    = "sh"
+dots 1,4,5,6  = "th"
+dots 1,5,6    = "wh"
+dots 2,4,6    = "ou"
+dots 1,2,4,5,6 = "ow"
+dots 3,4,6    = "ing"
+dots 4,5,6    = "tion" (and "ness")
+
+NEMETH BRAILLE (math/science) — KEY DIFFERENCES FROM UEB
+In Nemeth, dot patterns map differently:
+dots 3,4,5,6 = begin Nemeth
+dots 3       = , (comma in numbers)
+dots 4,6     = . (decimal point)
+dots 1,2,3,4,5,6 = (special indicator)
+Digits 1-9,0: same as Grade 1 alphabet (a-j) but in lower cell (add dots 3,6 shift)
+Actually in Nemeth: digits use LOWER dots:
+  dots 2       = 1
+  dots 2,3     = 2
+  dots 2,5     = 3
+  dots 2,5,6   = 4
+  dots 2,6     = 5
+  dots 2,3,5   = 6
+  dots 2,3,5,6 = 7
+  dots 2,3,6   = 8
+  dots 3,5     = 9
+  dots 3,5,6   = 0
+Operators in Nemeth:
+  dots 3,4     = + (plus)
+  dots 3,6     = - (minus)
+  dots 1,6     = × (multiply)
+  dots 3,4,6   = ÷ (divide)
+  dots 4,6     = = (equals) [preceded by dots 1,2,3,4,5,6 sometimes]
+  dots 4       = superscript indicator (exponent follows)
+  dots 5,6     = subscript indicator
+
+COMPUTER BRAILLE (8-dot ASCII Braille)
+Uses all 8 dots (adds dots 7,8 at bottom). Each cell = one ASCII character directly. Common:
+  dots 1,2,3,4,5,6,7 = {
+  dots 1,2,3,4,5,6,8 = }
+  Standard lowercase = same as Grade 1
+  Capital = same cell + dot 7
+
+MUSIC BRAILLE
+Notes: C D E F G A B = specific cells
+  C = dots 1,4,5,6
+  D = dots 1,5,6
+  E = dots 1,2,4,6
+  F = dots 1,2,4,5,6
+  G = dots 1,2,5,6
+  A = dots 2,4,6
+  B = dots 2,4,5,6
+Note values (upper 4 dots of cell determine duration):
+  Whole = dots 1,3,4,5,6
+  Half = dots 1,3,4,6
+  Quarter = dots 1,4,5
+  Eighth = dots 1,2,4,5
+  Sixteenth = dots 1,2,4,5,6
+Octave indicators: dots 4 = octave 4 (middle), dots 4,5 = octave 5, etc.
+`;
 
 router.post("/braille/process", async (req, res): Promise<void> => {
   const parsed = ProcessBrailleImageBody.safeParse(req.body);
@@ -46,115 +190,88 @@ router.post("/braille/process", async (req, res): Promise<void> => {
   const start = Date.now();
 
   try {
-    // ── Step 1: Classify the Braille system ──────────────────────────────
-    const classifyResponse = await openai.chat.completions.create({
-      model: "gpt-4.1",
-      max_completion_tokens: 512,
+    // Single comprehensive call: inspect dots → classify → decode
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o",
+      max_completion_tokens: 8192,
       messages: [
         {
-          role: "user",
-          content: [
-            {
-              type: "text",
-              text: `You are a Braille expert. Examine this image carefully and classify which Braille system or standard it uses.
+          role: "system",
+          content: `You are an expert Braille OCR engine with deep knowledge of all Braille standards. You will be given a Braille reference table and an image. You MUST analyze the actual raised dot patterns you see in the image — do not guess or fabricate text. Only decode what you can actually see.
 
-The possible systems are:
-- ueb_grade1: Unified English Braille Grade 1 — direct letter-by-letter, one cell per character, no contractions
-- ueb_grade2: Unified English Braille Grade 2 — uses contractions (whole-word and part-word). Most common globally. Used in USA, UK, Canada, Australia, India.
-- nemeth: Nemeth Code — Braille for mathematics, equations, fractions, operators, scientific notation
-- computer: Computer Braille / ASCII Braille — used for source code, programming characters, 8-dot system
-- music: Music Braille — encodes musical notation (notes, rests, dynamics, clefs)
-- unknown: Cannot determine with confidence
+${BRAILLE_REFERENCE}
 
-Evidence to look for:
-- Dense contractions and shorthand cells → ueb_grade2
-- Numeric indicator ⠼ followed by number cells, operators, fraction signs → nemeth
-- 8-dot cells or ASCII-mapped characters, code-like structure → computer
-- Note and octave indicators, music-specific cell patterns → music
-- Simple letter-by-letter with no contractions → ueb_grade1
-
-Respond ONLY with a JSON object:
-{
-  "brailleSystem": "ueb_grade2",
-  "systemConfidence": 0.92,
-  "systemReasoning": "Dense contractions visible including whole-word cells. Consistent with Grade 2 UEB used in educational material."
-}`,
-            },
-            {
-              type: "image_url",
-              image_url: { url: `data:${mimeType};base64,${imageBase64}`, detail: "high" },
-            },
-          ],
+CRITICAL RULES:
+1. You MUST describe the actual dot patterns you observe in each cell BEFORE decoding. Do not skip this step.
+2. If you cannot clearly see the dots in a cell, mark it as [unclear] rather than guessing.
+3. Do NOT invent or hallucinate text that isn't in the image.
+4. Work left-to-right, top-to-bottom, line by line.
+5. Your confidence score must reflect how clearly you can see the dots — poor image quality = lower confidence.`,
         },
-      ],
-    });
-
-    const classifyContent = classifyResponse.choices[0]?.message?.content ?? "{}";
-    const classifyMatch = classifyContent.match(/\{[\s\S]*\}/);
-    let classifyResult: { brailleSystem?: string; systemConfidence?: number; systemReasoning?: string } = {};
-    try {
-      classifyResult = classifyMatch ? JSON.parse(classifyMatch[0]) : {};
-    } catch {
-      // fall through with defaults
-    }
-
-    const brailleSystem = (classifyResult.brailleSystem as string) ?? "unknown";
-    const systemConfidence = Math.max(0, Math.min(1, classifyResult.systemConfidence ?? 0));
-    const systemReasoning = classifyResult.systemReasoning ?? "";
-    const decoderInstructions = SYSTEM_DECODERS[brailleSystem] ?? SYSTEM_DECODERS.unknown;
-
-    // ── Step 2: Decode with specialized instructions ──────────────────────
-    const decodeResponse = await openai.chat.completions.create({
-      model: "gpt-4.1",
-      max_completion_tokens: 4096,
-      messages: [
         {
           role: "user",
           content: [
             {
               type: "text",
-              text: `${decoderInstructions}
+              text: `Analyze this Braille image carefully using the reference table provided. Follow these steps EXACTLY:
 
-Now analyze this image and decode ALL Braille content following the rules above.
+STEP 1 — VISUAL INSPECTION
+Describe what you see in the image: image quality, lighting, contrast, how many rows of Braille cells you can identify, approximate number of cells per row.
 
-Additional tasks:
-1. Detect all Braille cells and reconstruct the correct reading order (left-to-right, top-to-bottom)
-2. Decode each cell using the ${brailleSystem} standard
-3. Reconstruct complete sentences, equations, code blocks, or musical phrases
-4. Identify any low-confidence or ambiguous regions
+STEP 2 — DOT PATTERN ANALYSIS  
+For each Braille cell (work left to right, row by row), identify which dots (1-6) appear raised. Write it as:
+Row 1: [cell1: dots X,X,X] [cell2: dots X,X] [cell3: dots X,X,X,X] ...
+Row 2: ...
 
-Respond ONLY with this JSON:
+STEP 3 — SYSTEM CLASSIFICATION
+Based on the dot patterns you observed, determine which Braille system this is:
+- ueb_grade1: if cells map directly to single letters with no contraction patterns
+- ueb_grade2: if you see whole-word contractions (cells like "the", "and", "for" standing alone)
+- nemeth: if you see math operators, equation structure, numeric indicator patterns
+- computer: if you see 8-dot cells or ASCII-like structure
+- music: if you see note/octave indicator patterns
+- unknown: if the patterns do not clearly match any system
+
+STEP 4 — DECODING
+Using the reference table and your dot observations from Step 2, decode each cell to its character. Show your work:
+Row 1: [dots 1,2,5 → h] [dots 1,5 → e] [dots 1,2,3 → l] ...
+Assembled row 1: "hel..."
+
+STEP 5 — OUTPUT JSON
+Output ONLY a JSON object (no text before or after it):
 {
-  "rawText": "the fully decoded text here",
-  "confidence": 0.87,
-  "lineCount": 6,
-  "regions": [
-    {"x": 10, "y": 20, "width": 50, "height": 30, "confidence": 0.9}
-  ],
-  "warnings": ["slight blur in bottom-right corner"]
+  "rawText": "the fully decoded text, with \\n for line breaks",
+  "confidence": 0.85,
+  "lineCount": 3,
+  "brailleSystem": "ueb_grade2",
+  "systemConfidence": 0.9,
+  "systemReasoning": "Observed whole-word contraction cells for 'the' (dots 3,6) and 'and' (dots 3,4,5,6). Text uses contracted forms.",
+  "regions": [{"x": 5, "y": 10, "width": 90, "height": 80, "confidence": 0.85}],
+  "warnings": ["slight blur on right side reduces confidence in last 3 cells"]
 }
 
-Rules:
-- confidence is 0.0-1.0 (overall page confidence)
-- lineCount is number of Braille lines detected
-- regions are detected areas (normalized 0-100 coordinate space, max 10 regions)
-- warnings lists quality issues (empty array if none)
-- rawText preserves line breaks with \\n
-- If no Braille is detected, set rawText to "" and confidence to 0.0`,
+If you cannot confidently read any Braille (no dots visible, not a Braille image, or very poor quality), output:
+{"rawText": "", "confidence": 0.0, "lineCount": 0, "brailleSystem": "unknown", "systemConfidence": 0.0, "systemReasoning": "No readable Braille dots detected", "regions": [], "warnings": ["No Braille content detected in this image"]}`,
             },
             {
               type: "image_url",
-              image_url: { url: `data:${mimeType};base64,${imageBase64}`, detail: "high" },
+              image_url: {
+                url: `data:${mimeType};base64,${imageBase64}`,
+                detail: "high",
+              },
             },
           ],
         },
       ],
     });
 
-    const decodeContent = decodeResponse.choices[0]?.message?.content ?? "{}";
-    const decodeMatch = decodeContent.match(/\{[\s\S]*\}/);
-    if (!decodeMatch) {
-      res.status(400).json({ error: "Failed to parse Braille detection result" });
+    const content = response.choices[0]?.message?.content ?? "";
+
+    // Extract the JSON block — it may appear after chain-of-thought reasoning text
+    const jsonMatch = content.match(/\{[\s\S]*"rawText"[\s\S]*\}/);
+    if (!jsonMatch) {
+      req.log.warn({ content: content.slice(0, 500) }, "No JSON found in model response");
+      res.status(400).json({ error: "Could not extract Braille decoding result. The image may not contain readable Braille." });
       return;
     }
 
@@ -162,11 +279,15 @@ Rules:
       rawText?: string;
       confidence?: number;
       lineCount?: number;
+      brailleSystem?: string;
+      systemConfidence?: number;
+      systemReasoning?: string;
       regions?: Array<{ x: number; y: number; width: number; height: number; confidence: number }>;
       warnings?: string[];
     };
+
     try {
-      result = JSON.parse(decodeMatch[0]);
+      result = JSON.parse(jsonMatch[0]);
     } catch {
       res.status(400).json({ error: "Invalid JSON from vision model" });
       return;
@@ -181,9 +302,9 @@ Rules:
       regions: result.regions ?? [],
       processingMs,
       warnings: result.warnings ?? [],
-      brailleSystem,
-      systemConfidence,
-      systemReasoning,
+      brailleSystem: result.brailleSystem ?? "unknown",
+      systemConfidence: Math.max(0, Math.min(1, result.systemConfidence ?? 0)),
+      systemReasoning: result.systemReasoning ?? "",
     });
   } catch (err) {
     req.log.error({ err }, "Braille processing error");
@@ -205,29 +326,50 @@ router.post("/braille/correct", async (req, res): Promise<void> => {
     return;
   }
 
-  const systemContext: Record<string, string> = {
-    ueb_grade1: "The text was decoded from Grade 1 UEB Braille (letter-by-letter). Fix spacing, capitalization, and punctuation only. Do not alter the words themselves.",
-    ueb_grade2: "The text was decoded from Grade 2 UEB contracted Braille. Ensure all contractions were correctly expanded into full English words. Fix any missed contractions, spelling, spacing, capitalization, and punctuation.",
-    nemeth: "The text was decoded from Nemeth mathematical Braille. Preserve all numbers, operators, fractions, exponents, and mathematical symbols exactly. Only correct obvious OCR artifacts like misread dots. Do not paraphrase equations.",
-    computer: "The text was decoded from Computer Braille (source code / ASCII Braille). Preserve all whitespace, indentation, brackets, operators, and special characters exactly as decoded — they are syntactically significant. Only fix characters that are clearly misread.",
-    music: "The text was decoded from Music Braille. Preserve all note names, octave markers, duration values, dynamic markings, and musical structure. Only correct obvious misreadings.",
-    unknown: "The text was decoded from Braille of unknown type. Apply conservative corrections only — fix obvious spacing and capitalization issues without changing potentially significant characters.",
+  const systemInstructions: Record<string, string> = {
+    ueb_grade1: `This text was decoded from Grade 1 UEB Braille (letter-by-letter, no contractions). Fix ONLY: missing spaces between words, incorrect capitalization from capital indicators, punctuation from punctuation cells. Do NOT change any words — only fix structural/spacing errors from the OCR process.`,
+
+    ueb_grade2: `This text was decoded from Grade 2 UEB contracted Braille. Check for: unexpanded contractions that should have been expanded (e.g. "⠮" → "the"), missing spaces, capitalization errors. Expand any remaining Braille contractions to full English words. Fix spelling errors that are clearly OCR artifacts. Preserve the original meaning exactly.`,
+
+    nemeth: `This text was decoded from Nemeth mathematical Braille. Your job is to format it cleanly:
+- Keep all numbers, operators (+, -, ×, ÷, =, <, >, ≤, ≥), fractions, and exponents exactly as decoded
+- Format fractions as "n/d" or "\\frac{n}{d}"
+- Format exponents as "x^n"
+- Fix only obvious OCR misreads (e.g. "l" vs "1", "O" vs "0")
+- Do NOT rewrite or simplify equations`,
+
+    computer: `This text was decoded from Computer Braille (source code / ASCII Braille). PRESERVE EVERYTHING EXACTLY:
+- All whitespace, indentation, tabs must be kept
+- All special characters (brackets, operators, punctuation) must be kept
+- Only fix characters that are clearly OCR artifacts and unambiguously wrong
+- This may be source code — syntactic correctness depends on exact characters`,
+
+    music: `This text was decoded from Music Braille. Clean up the output:
+- Note names (C, D, E, F, G, A, B) must be correct
+- Preserve octave markers (e.g. "4" for middle octave), duration values, dynamics
+- Format as: [Note][Octave][Duration] e.g. "C4 quarter, D4 quarter, E4 half"
+- Fix only clear misreads`,
+
+    unknown: `This text was decoded from Braille of unidentified type. Apply minimal corrections: fix obvious spacing issues and clear misread characters only. Do not change words or structure.`,
   };
 
-  const context = systemContext[brailleSystem ?? "unknown"] ?? systemContext.unknown;
+  const instruction = systemInstructions[brailleSystem ?? "unknown"] ?? systemInstructions.unknown;
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-4o",
       max_completion_tokens: 4096,
       messages: [
         {
           role: "system",
-          content: `You are a post-processor for Braille OCR output. ${context}\n\nRespond ONLY with a JSON object: {"correctedText": "...", "changesApplied": N} where N is the number of corrections made.`,
+          content: `You are a precise Braille OCR post-processor. ${instruction}
+
+Respond ONLY with valid JSON: {"correctedText": "...", "changesApplied": N}
+N = number of corrections made. If nothing needed fixing, N = 0 and correctedText = rawText verbatim.`,
         },
         {
           role: "user",
-          content: `Raw Braille OCR output:\n\n${rawText}`,
+          content: rawText,
         },
       ],
     });
