@@ -1,0 +1,172 @@
+Build a new project called NeuroDot from scratch as an advanced accessibility-first Braille reading application.
+
+The product must be a real, technically serious prototype for blind and low-vision users. It should read embossed physical Braille from live camera, uploaded image, or recorded video, reconstruct the correct page reading order, convert the Braille into English text, improve the output into grammatically correct sentences, and read the final result aloud.
+
+Do not make this a simple OCR demo. Build a hybrid computer-vision and language pipeline that looks and behaves like a real assistive technology product.
+
+CORE PRODUCT GOAL
+Create a system that can:
+- detect a Braille page in an image or video frame
+- correct perspective, rotation, blur, shadows, and lighting issues
+- detect raised Braille dots or Braille cells
+- reconstruct line order and reading order across the full page
+- decode Braille into raw text
+- apply sentence-level correction and grammar-aware reconstruction
+- output the final result as on-screen text and speech
+
+TECHNICAL ARCHITECTURE
+Use a modular pipeline with clear separation of concerns:
+
+1. Input layer
+- live webcam
+- uploaded image
+- uploaded video
+- recorded frame sequence
+
+2. Vision preprocessing
+- grayscale conversion
+- denoising
+- contrast enhancement
+- adaptive thresholding
+- edge detection
+- morphology filtering
+- perspective correction
+- skew correction
+- page boundary detection
+- frame stabilization for live video
+
+3. Braille localization
+- detect Braille regions and cell candidates
+- use object detection or structured detection logic for dot/cell localization
+- assign confidence scores to each region
+
+4. Reading order reconstruction
+- detect rows, lines, words, and spacing
+- rebuild the correct page-wise reading sequence
+- preserve punctuation, capitalization, and paragraph structure
+
+5. Braille decoding
+- convert dot patterns into raw Braille characters or symbols
+- support sentence-level assembly instead of isolated character mapping
+- handle low-confidence regions using nearby context
+
+6. Language reconstruction
+- convert raw decoded output into grammatically correct English
+- fix spacing, punctuation, and capitalization where appropriate
+- use context-aware correction so the final text reads naturally
+
+7. Speech output
+- convert the final sentence into text-to-speech audio
+- provide play, pause, resume, and stop controls
+
+TECH STACK
+Use a modern standard stack that can run reliably in a normal web environment.
+
+Frontend:
+- React
+- TailwindCSS
+- Webcam/camera capture
+- accessible UI components
+- smooth but subtle animations only where useful
+
+Backend:
+- Python or Node.js based API
+- OpenCV for preprocessing and frame analysis
+- optional YOLO or lightweight detection model for localization
+- text reconstruction and grammar-aware post-processing
+- TTS support
+
+REQUIRED FEATURES
+- live camera mode
+- image upload mode
+- video upload mode
+- real-time or near-real-time processing
+- confidence display for detected Braille regions
+- raw decoded text view
+- corrected sentence view
+- audio playback of final output
+- clear error handling when detection is uncertain
+- export decoded text as .txt or .json
+
+UI / UX REQUIREMENTS
+Design the interface for blind, low-vision, and general users.
+
+The interface must be:
+- clean
+- calm
+- professional
+- accessible
+- high contrast
+- easy to navigate
+- simple to understand quickly
+
+Visual direction:
+- background: deep navy or near-black
+- text: off-white
+- accent: calm blue
+- success: emerald green
+- warning: amber
+- error: muted red
+- no neon overload
+- no clutter
+- no gaming-style styling
+- no distracting effects
+
+Layout:
+- top header with app name and current status
+- large main preview panel for camera or uploaded file
+- clear scan controls
+- results panel for raw and corrected text
+- speech controls panel
+- optional history/logs panel
+
+Accessibility rules:
+- keyboard navigable
+- screen-reader friendly
+- visible focus states
+- large buttons and readable typography
+- semantic HTML
+- ARIA labels where needed
+- do not rely on color alone
+- simple labels instead of technical jargon in the user-facing UI
+
+ENGINEERING QUALITY
+The codebase must be modular, readable, and production-style:
+- separate components
+- reusable functions
+- clear folder structure
+- clean naming
+- minimal duplication
+- reliable error handling
+- standard deployment readiness
+- no template-specific clutter
+
+ADVANCED DIFFERENTIATORS
+Make the system feel more advanced than a basic Braille OCR app:
+- use multi-frame smoothing for live video
+- use confidence voting across frames
+- detect blurry or unstable frames and warn the user
+- recover reading order across a whole page
+- provide both raw decoding and corrected sentence output
+- support page-wise translation, not only isolated cells
+- show visual overlays for detected Braille regions and confidence
+
+IMPORTANT CONSTRAINTS
+- Build a real working prototype, not a fake simulation.
+- Do not rely on only OpenCV rules if a stronger hybrid approach is possible.
+- Do not make the UI overly flashy or complex.
+- Do not use Replit-specific assumptions unless absolutely required by the platform.
+- Focus on accessibility, reliability, and technical depth.
+
+DELIVERABLE
+Generate a full working project with:
+- source code
+- clean UI
+- camera and upload flows
+- Braille processing pipeline
+- sentence reconstruction
+- speech output
+- readable structure
+- a strong README explaining the architecture, setup, and limitations
+
+The result should feel like a serious accessibility product for blind users and a strong hackathon submission with real technical depth.
