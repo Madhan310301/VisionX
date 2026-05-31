@@ -1,96 +1,45 @@
-# Braille Vision
+<div align="center">
 
-<p align="center">
-  <img src="your-animated-banner.svg" alt="Braille Vision Banner" />
-</p>
+# 👁️ VisionX
 
-<p align="center">
-  <b>Dot-wise Braille recognition for handwritten and embossed Braille.</b>
-</p>
+<img src="https://readme-typing-svg.demolab.com?font=Orbitron&weight=700&size=34&pause=1000&color=00D9FF&center=true&vCenter=true&width=900&lines=VisionX;AI-Powered+Braille+Vision+System;Dot-Wise+Braille+Recognition;Accessibility+Through+Artificial+Intelligence" alt="Typing SVG" />
 
----
+<br>
 
-## ✨ Features
+![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
+![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
 
-- **Dot-wise Braille Detection**  
-  Detects each Braille dot individually instead of guessing whole words.
+### Transforming Braille Into Understanding
 
-- **YOLO-Based Region Detection**  
-  Finds Braille areas in images and PDF pages before decoding.
-
-- **OpenCV Dot Extraction**  
-  Uses image preprocessing, thresholding, and contour analysis to isolate Braille dots.
-
-- **Braille Cell Reconstruction**  
-  Groups detected dots into valid 6-dot Braille cells.
-
-- **CNN Validation Layer**  
-  Checks uncertain cells for better accuracy on noisy or handwritten samples.
-
-- **Gemini Text Correction**  
-  Refines uncertain decoded output into cleaner final text.
-
-- **Image and PDF Support**  
-  Works with uploaded Braille images as well as scanned documents.
-
-- **Confidence Scores**  
-  Displays how confident the system is for each detected cell or line.
-
-- **Visual Overlays**  
-  Shows detected dots and Braille regions for debugging and verification.
-
-- **Built for Real-World Braille**  
-  Designed to handle handwritten paper Braille, blur, skew, shadows, and uneven lighting.
+</div>
 
 ---
 
-## 🔥 Why Braille Vision?
+## About VisionX
 
-Traditional OCR tools are not built for Braille.  
-Braille Vision uses a **dot-first hybrid pipeline** to read Braille the right way:
+VisionX is an AI-powered Braille interpretation project designed to convert handwritten and embossed Braille into readable text through a dot-wise detection pipeline.  
+It is built for real-world Braille documents, including noisy scans, tilted images, uneven lighting, and paper-based handwritten Braille.
 
-**Upload → Preprocess → Detect Braille Region → Detect Dots → Group Cells → Decode → Correct → Output Text**
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend:** HTML, CSS, JavaScript
-- **Vision:** OpenCV, YOLO
-- **ML:** CNN
-- **AI Correction:** Gemini API
-- **Input Formats:** Images, PDFs
+The project focuses on accurate Braille dot analysis, structured cell reconstruction, and clean text output for accessibility-driven applications.
 
 ---
 
-## 🎯 Output
+## How It Works
 
-- Extracted Braille text
-- Confidence score
-- Dot overlay visualization
-- Braille cell detection view
-- Uncertain prediction warnings
-
----
-
-## 🚀 Project Goal
-
-To build an accurate and accessible Braille reader that can convert handwritten Braille into text with strong real-world performance.
-
----
-
-## 🎨 Optional Animated Header
-
-If you want a more attractive README, use an animated SVG header instead of JavaScript.  
-You can place a custom SVG banner or typing-style animation image at the top of the README.
-
----
-
-## 📌 Note
-
-GitHub README does not run JavaScript, so animation should be added using:
-- animated SVG
-- GIFs
-- badges
-- collapsible sections
-- Mermaid diagrams
+```text
+Upload Image or PDF
+        ↓
+Preprocess Document
+        ↓
+Detect Braille Region
+        ↓
+Detect Individual Dots
+        ↓
+Group Dots into Cells
+        ↓
+Decode Braille Pattern
+        ↓
+Validate Uncertain Cells
+        ↓
+Return Final Text
