@@ -6,9 +6,9 @@
 
 <br>
 
-![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
-![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
-![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/YOUR_REPO?style=for-the-badge)
+![GitHub stars](https://img.shields.io/github/stars/Madhan310301/VisionX?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/Madhan310301/VisionX?style=for-the-badge)
+![GitHub license](https://img.shields.io/github/license/Madhan310301/VisionX?style=for-the-badge)
 
 ### Transforming Braille Into Understanding
 
