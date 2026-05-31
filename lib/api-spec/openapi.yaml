@@ -292,6 +292,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/BrailleRegion"
+        debugDots:
+          type: array
+          items:
+            $ref: "#/components/schemas/BrailleDot"
         lineCount:
           type: integer
         processingMs:
@@ -300,6 +304,19 @@ components:
           type: array
           items:
             type: string
+
+    BrailleDot:
+      type: object
+      required: [x, y, radius]
+      properties:
+        x:
+          type: number
+        y:
+          type: number
+        radius:
+          type: number
+        confidence:
+          type: number
 
     BrailleCorrectionInput:
       type: object

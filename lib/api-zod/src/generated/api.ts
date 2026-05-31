@@ -23,7 +23,8 @@ export const HealthCheckResponse = zod.object({
 export const ProcessBrailleImageBody = zod.object({
   "imageBase64": zod.string().describe('Base64-encoded image data'),
   "mimeType": zod.string().describe('MIME type (image\/jpeg, image\/png, etc.)'),
-  "mode": zod.enum(['camera', 'upload', 'video']).optional()
+  "mode": zod.enum(['camera', 'upload', 'video']).optional(),
+  "scanMode": zod.string().optional()
 })
 
 export const ProcessBrailleImageResponse = zod.object({
@@ -39,6 +40,12 @@ export const ProcessBrailleImageResponse = zod.object({
   "height": zod.number(),
   "confidence": zod.number()
 })),
+  "debugDots": zod.array(zod.object({
+  "x": zod.number(),
+  "y": zod.number(),
+  "radius": zod.number(),
+  "confidence": zod.number().optional()
+})).optional(),
   "lineCount": zod.number(),
   "processingMs": zod.number(),
   "warnings": zod.array(zod.string()).optional()

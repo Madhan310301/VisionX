@@ -46,6 +46,7 @@ export interface BrailleProcessInput {
   /** MIME type (image/jpeg, image/png, etc.) */
   mimeType: string;
   mode?: BrailleProcessInputMode;
+  scanMode?: string;
 }
 
 export interface BrailleRegion {
@@ -54,6 +55,15 @@ export interface BrailleRegion {
   width: number;
   height: number;
   confidence: number;
+  label?: string;
+  color?: string;
+}
+
+export interface BrailleDot {
+  x: number;
+  y: number;
+  radius: number;
+  confidence?: number;
 }
 
 export interface BrailleProcessResult {
@@ -65,6 +75,7 @@ export interface BrailleProcessResult {
   /** Brief explanation of why this system was detected */
   systemReasoning?: string;
   regions: BrailleRegion[];
+  debugDots?: BrailleDot[];
   lineCount: number;
   processingMs: number;
   warnings?: string[];
