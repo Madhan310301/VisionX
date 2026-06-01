@@ -11,46 +11,53 @@ import os
 
 # Standard Alphabet / Punctuation UEB Grade 1 Lookup
 # Mapped strictly to binary representation
+# Bit layout: bit0=dot1, bit1=dot2, bit2=dot3, bit3=dot4, bit4=dot5, bit5=dot6
+# binary = (d1<<0) | (d2<<1) | (d3<<2) | (d4<<3) | (d5<<4) | (d6<<5)
 UEB_GRADE_1 = {
-    0b000001: "a",  # ⠁ (1)
-    0b000011: "b",  # ⠃ (1,2)
-    0b001001: "c",  # ⠉ (1,4)
-    0b011001: "d",  # ⠙ (1,4,5)
-    0b010001: "e",  # ⠑ (1,5)
-    0b001011: "f",  # ⠋ (1,2,4)
-    0b011011: "g",  # ⠛ (1,2,4,5)
-    0b010011: "h",  # ⠓ (1,2,5)
-    0b001010: "i",  # ⠊ (2,4)
-    0b011010: "j",  # ⠚ (2,4,5)
-    0b000101: "k",  # ⠅ (1,3)
-    0b000111: "l",  # ⠇ (1,2,3)
-    0b001101: "m",  # ⠍ (1,3,4)
-    0b011101: "n",  # ⠝ (1,3,4,5)
-    0b010101: "o",  # ⠕ (1,3,5)
-    0b001111: "p",  # ⠏ (1,2,3,4)
-    0b011111: "q",  # ⠟ (1,2,3,4,5)
-    0b010111: "r",  # ⠗ (1,2,3,5)
-    0b001110: "s",  # ⠎ (2,3,4)
-    0b011110: "t",  # ⠞ (2,3,4,5)
-    0b100101: "u",  # ⠥ (1,3,6)
-    0b100111: "v",  # ⠧ (1,2,3,6)
-    0b111010: "w",  # ⠺ (2,4,5,6)
-    0b101101: "x",  # ⠭ (1,3,4,6)
-    0b111101: "y",  # ⠽ (1,3,4,5,6)
-    0b110101: "z",  # ⠵ (1,3,5,6)
-    
-    # Indicators & Punctuation
-    0b100000: "[CAP]",     # ⠠ (6) - Capital Indicator
-    0b111100: "[NUM]",     # ⠼ (3,4,5,6) - Number Indicator
-    0b110110: "[LETTER]",  # ⠶ (2,3,5,6)
-    0b010010: ".",         # ⠲ (2,5) - period / decimal
-    0b000110: ",",         # ⠂ (2) - comma / semi-colon in math
-    0b000100: ";",         # ⠂ (3)
-    0b010000: ":",         # ⠐ (5)
-    0b110110: "!",         # ⠶ (2,3,5,6)
-    0b100110: "\"",        # ⠦ (2,3,6) - open quotes
-    0b101000: "?",         # ⠦ (2,3)
-    0b100100: "(",         # ⠤ (3,6)
+    # ── Letters a-z ──────────────────────────────────────────────────────
+    0b000001: "a",  # ⠁  dots 1
+    0b000011: "b",  # ⠃  dots 1,2
+    0b001001: "c",  # ⠉  dots 1,4
+    0b011001: "d",  # ⠙  dots 1,4,5
+    0b010001: "e",  # ⠑  dots 1,5
+    0b001011: "f",  # ⠋  dots 1,2,4
+    0b011011: "g",  # ⠛  dots 1,2,4,5
+    0b010011: "h",  # ⠓  dots 1,2,5
+    0b001010: "i",  # ⠊  dots 2,4
+    0b011010: "j",  # ⠚  dots 2,4,5
+    0b000101: "k",  # ⠅  dots 1,3
+    0b000111: "l",  # ⠇  dots 1,2,3
+    0b001101: "m",  # ⠍  dots 1,3,4
+    0b011101: "n",  # ⠝  dots 1,3,4,5
+    0b010101: "o",  # ⠕  dots 1,3,5
+    0b001111: "p",  # ⠏  dots 1,2,3,4
+    0b011111: "q",  # ⠟  dots 1,2,3,4,5
+    0b010111: "r",  # ⠗  dots 1,2,3,5
+    0b001110: "s",  # ⠎  dots 2,3,4
+    0b011110: "t",  # ⠞  dots 2,3,4,5
+    0b100101: "u",  # ⠥  dots 1,3,6
+    0b100111: "v",  # ⠧  dots 1,2,3,6
+    0b111010: "w",  # ⠺  dots 2,4,5,6
+    0b101101: "x",  # ⠭  dots 1,3,4,6
+    0b111101: "y",  # ⠽  dots 1,3,4,5,6
+    0b110101: "z",  # ⠵  dots 1,3,5,6
+
+    # ── Indicators ──────────────────────────────────────────────────────
+    0b100000: "[CAP]",     # ⠠  dot  6        — Capital indicator
+    0b111100: "[NUM]",     # ⠼  dots 3,4,5,6  — Number indicator
+    0b110000: "[LETTER]",  # ⠰  dots 5,6      — Letter indicator
+
+    # ── Punctuation (UEB) ───────────────────────────────────────────────
+    0b000010: ",",         # ⠂  dot  2        — Comma
+    0b000100: "'",         # ⠄  dot  3        — Apostrophe
+    0b010010: ";",         # ⠒  dots 2,5      — Semicolon
+    0b100010: ":",         # ⠢  dots 2,6      — Colon  (UEB uses dots 2,5 context-dependent; 2,6 is common)
+    0b110010: ".",         # ⠲  dots 2,5,6    — Period / full stop
+    0b010110: "!",         # ⠖  dots 2,3,5    — Exclamation mark
+    0b100110: "?",         # ⠦  dots 2,3,6    — Question mark
+    0b100100: "-",         # ⠤  dots 3,6      — Hyphen
+    0b110110: "(",         # ⠶  dots 2,3,5,6  — Open parenthesis
+    0b110100: ")",         # ⠴  dots 3,5,6    — Close parenthesis
 }
 
 # Number indicator translations (follows number sign ⠼)
@@ -60,17 +67,18 @@ UEB_NUMBERS = {
 }
 
 # Nemeth dropped digit representations (uses lower dots 2,3,5,6)
+# Bit layout same as UEB: bit0=dot1, bit1=dot2, bit2=dot3, bit3=dot4, bit4=dot5, bit5=dot6
 NEMETH_DIGITS = {
-    0b000010: "1",  # ⠂ (2)
-    0b000110: "2",  # ⠆ (2,3)
-    0b010010: "3",  # ⠒ (2,5)
-    0b010110: "4",  # ⠲ (2,5,6)
-    0b010000: "5",  # ⠐ (5)
-    0b010100: "6",  # ⠖ (2,3,5)
-    0b011110: "7",  # ⠶ (2,3,5,6)
-    0b010110: "8",  # ⠦ (2,3,6)
-    0b010100: "9",  # ⠔ (3,5)
-    0b011100: "0",  # ⠴ (3,5,6)
+    0b000010: "1",  # ⠂  dot  2
+    0b000110: "2",  # ⠆  dots 2,3
+    0b010010: "3",  # ⠒  dots 2,5
+    0b110010: "4",  # ⠲  dots 2,5,6
+    0b100010: "5",  # ⠢  dots 2,6
+    0b010110: "6",  # ⠖  dots 2,3,5
+    0b110110: "7",  # ⠶  dots 2,3,5,6
+    0b100110: "8",  # ⠦  dots 2,3,6
+    0b010100: "9",  # ⠔  dots 3,5
+    0b110100: "0",  # ⠴  dots 3,5,6
 }
 
 # Grade 2 Common Whole Word Contractions (when cell stands alone)
@@ -613,22 +621,62 @@ def segment_braille_cells(rows, spacing, img_shape):
         split_threshold = min(split_threshold, d_intra * 2.6)
 
         row_cells_dots = []
+        row_cells_gaps = []   # track the gap before each cell group
         current_cell_dots = [row_dots[0]]
         
         for d in row_dots[1:]:
             last_cx = current_cell_dots[-1]["center"][0]
             cx = d["center"][0]
-            if (cx - last_cx) < split_threshold:
+            gap = cx - last_cx
+            if gap < split_threshold:
                 current_cell_dots.append(d)
             else:
                 row_cells_dots.append(current_cell_dots)
+                row_cells_gaps.append(gap)
                 current_cell_dots = [d]
         row_cells_dots.append(current_cell_dots)
         
+        # ── Word-space detection ──────────────────────────────────────
+        # If the horizontal gap between two consecutive cell groups is
+        # significantly larger than the intra-cell gap, insert a
+        # synthetic space cell so the decoder produces word boundaries.
+        word_gap_threshold = d_inter * 0.85  # tuned: ~85% of inter-cell spacing
+        if row_cells_gaps:
+            # use a data-driven threshold when we have enough gaps
+            gap_arr = np.array(row_cells_gaps, dtype=float)
+            if gap_arr.size >= 3:
+                g_centers, _ = _kmeans_1d(gap_arr, 2)
+                if g_centers.size >= 2:
+                    small_g, large_g = float(np.min(g_centers)), float(np.max(g_centers))
+                    if large_g > small_g * 1.4:
+                        word_gap_threshold = (small_g + large_g) / 2.0
+
         # 2. Decode each grouped cell from the local dot grid.
+        #    Insert space cells where word gaps are detected.
         for cell_idx, cell_dots in enumerate(row_cells_dots):
             if not cell_dots:
                 continue
+
+            # Insert a space cell before this group if the preceding gap
+            # is large enough to indicate a word boundary.
+            if cell_idx > 0 and cell_idx - 1 < len(row_cells_gaps):
+                if row_cells_gaps[cell_idx - 1] >= word_gap_threshold:
+                    # Compute a plausible bounding box midway in the gap
+                    prev_cell_dots = row_cells_dots[cell_idx - 1]
+                    prev_max_x = max(dd["center"][0] for dd in prev_cell_dots)
+                    cur_min_x = min(dd["center"][0] for dd in cell_dots)
+                    space_cx = int((prev_max_x + cur_min_x) / 2.0)
+                    space_cy = int(row_y)
+                    cells.append({
+                        "bbox": (space_cx - 4, space_cy - int(avg_radius), 8, int(avg_radius * 3)),
+                        "binary": 0,
+                        "confidence": 1.0,
+                        "dots_detected": 0,
+                        "row_idx": row_idx,
+                        "cx": space_cx,
+                        "dot_matrix": [[0,0],[0,0],[0,0]],
+                        "dot_centers": [],
+                    })
                 
             xs = [d["center"][0] for d in cell_dots]
             ys = [d["center"][1] for d in cell_dots]
@@ -702,16 +750,30 @@ def segment_braille_cells(rows, spacing, img_shape):
                             dot_matrix[r, col] = 1
                         dot_confidences.append(d_conf)
                 elif n_dots >= 3:
-                    # Map to all 3 rows
-                    for r, d in enumerate(dots_in_col[:3]):
+                    # Map each dot to its nearest row using y_centers (not by index)
+                    used_rows = set()
+                    for d in dots_in_col[:3]:
                         cx, cy = d["center"]
+                        # Find nearest unused row
+                        best_r = None
+                        best_dist = float('inf')
+                        for candidate_r in range(3):
+                            if candidate_r in used_rows:
+                                continue
+                            dist = abs(cy - y_centers[candidate_r])
+                            if dist < best_dist:
+                                best_dist = dist
+                                best_r = candidate_r
+                        if best_r is None:
+                            best_r = int(np.argmin(np.abs(y_centers - cy)))
+                        used_rows.add(best_r)
                         column_score = 1.0 - (abs(cx - (left_col_x if col == 0 else right_col_x)) / max(cell_width * 0.5, 1.0))
-                        row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
+                        row_score = 1.0 - (abs(cy - y_centers[best_r]) / max(cell_height * 0.5, 1.0))
                         structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
                         d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
                         
                         if d_conf >= 0.45:
-                            dot_matrix[r, col] = 1
+                            dot_matrix[best_r, col] = 1
                         dot_confidences.append(d_conf)
                 
             # Construct standard 6-bit code
@@ -842,13 +904,15 @@ def decode_braille_sequence(cells, scan_mode):
             conf = cell["confidence"]
             
             # Require a modest per-cell confidence; weak cells remain marked uncertain
-            if conf < 0.58:
+            if conf < 0.35:
                 row_text.append("[UNCERTAIN_CELL]")
                 cell["char"] = "?"
                 i += 1
                 continue
 
-            if cell.get("dots_detected", 0) <= 1 and code != 0:
+            # Only reject cells where no dots were detected but code is nonzero
+            # (impossible state = noise). Single-dot cells are valid (e.g. a, comma).
+            if cell.get("dots_detected", 0) == 0 and code != 0:
                 row_text.append("[UNCERTAIN_CELL]")
                 cell["char"] = "?"
                 i += 1
