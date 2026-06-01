@@ -208,15 +208,16 @@ def detect_dots(binary_img, gray_img=None):
         areas = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
-            if 8 <= area <= 1200:
+            # Ignore very small noise and extremely large blobs
+            if 16 <= area <= 1200:
                 areas.append(area)
 
         if not areas:
             continue
 
         median_area = np.median(areas)
-        min_area = max(8, median_area * 0.20)
-        max_area = min(1500, median_area * 4.0)
+        min_area = max(10, median_area * 0.24)
+        max_area = min(1400, median_area * 3.6)
 
         for cnt in contours:
             area = cv2.contourArea(cnt)
@@ -229,7 +230,8 @@ def detect_dots(binary_img, gray_img=None):
 
             # Circularity check: C = 4*pi*area/perimeter^2
             circularity = (4 * np.pi * area) / (perimeter * perimeter)
-            if circularity < 0.58:
+            # Require stronger circularity to reject texture specks
+            if circularity < 0.60:
                 continue
 
             # aspect ratio of bounding box (to remove flat creases or margins)
@@ -253,7 +255,7 @@ def detect_dots(binary_img, gray_img=None):
 
             dots.append({
                 "center": (cx, cy),
-                "radius": max(4, int(radius)),
+                "radius": max(5, int(radius)),
                 "area": area,
                 "circularity": circularity
             })
@@ -288,10 +290,65 @@ def detect_dots(binary_img, gray_img=None):
                 "support": 1,
             })
 
+    # --- Hough Circle Boost: detect strong circular candidates and merge/boost clusters ---
+    try:
+        if gray_img is not None and len(clusters) > 0:
+            g = gray_img.copy()
+            if len(g.shape) == 3:
+                g = cv2.cvtColor(g, cv2.COLOR_BGR2GRAY)
+            g_blur = cv2.medianBlur(g, 5)
+
+            # Estimate reasonable radius bounds from current clusters
+            median_radius = int(np.median([c["radius"] for c in clusters])) if clusters else 6
+            min_r = max(3, int(median_radius * 0.5))
+            max_r = max(8, int(median_radius * 2.5))
+
+            circles = cv2.HoughCircles(
+                g_blur,
+                cv2.HOUGH_GRADIENT,
+                dp=1.2,
+                minDist=max(6, median_radius // 2),
+                param1=50,
+                param2=28,
+                minRadius=min_r,
+                maxRadius=max_r,
+            )
+
+            if circles is not None:
+                circles = np.round(circles[0]).astype(int)
+                for (x, y, r) in circles:
+                    # find nearest existing cluster
+                    nearest_idx = None
+                    nearest_dist = 1e9
+                    for idx, cluster in enumerate(clusters):
+                        kx, ky = cluster["center"]
+                        d = math.hypot(kx - x, ky - y)
+                        if d < nearest_dist:
+                            nearest_dist = d
+                            nearest_idx = idx
+
+                    if nearest_idx is not None and nearest_dist <= max(6, clusters[nearest_idx]["radius"] * 1.4):
+                        # boost support and circularity for matched cluster
+                        clusters[nearest_idx]["support"] = max(clusters[nearest_idx]["support"], 2)
+                        clusters[nearest_idx]["circularity"] = max(clusters[nearest_idx]["circularity"], 0.85)
+                    else:
+                        # add new high-confidence circular cluster
+                        clusters.append({
+                            "center": (int(x), int(y)),
+                            "radius": int(r),
+                            "area": math.pi * (r ** 2),
+                            "circularity": 0.9,
+                            "support": 2,
+                        })
+    except Exception:
+        # Non-fatal: if Hough fails, proceed with contour results
+        pass
+
     dots = []
     for cluster in clusters:
+        # require stronger circularity to auto-accept; otherwise need at least 2 supports
         if cluster["support"] >= 2 or cluster["circularity"] >= 0.82:
-            cluster["confidence"] = min(1.0, 0.55 + 0.15 * cluster["support"] + cluster["circularity"] * 0.25)
+            cluster["confidence"] = min(1.0, 0.58 + 0.12 * cluster["support"] + cluster["circularity"] * 0.28)
             dots.append(cluster)
 
     # Remove isolated false positives that do not belong to a Braille lattice.
@@ -308,13 +365,14 @@ def detect_dots(binary_img, gray_img=None):
 
         nearest = np.asarray(nearest, dtype=float)
         if nearest.size:
-          local_floor = max(median_radius * 5.0, float(np.percentile(nearest, 35)))
-          keep = []
-          for dot, nn_dist in zip(dots, nearest):
-              if nn_dist <= local_floor or dot["support"] >= 2:
-                  keep.append(dot)
-          if len(keep) >= max(4, len(dots) // 2):
-              dots = keep
+            # tighten neighborhood requirement to remove isolated texture dots
+            local_floor = max(median_radius * 3.5, float(np.percentile(nearest, 35)))
+            keep = []
+            for dot, nn_dist in zip(dots, nearest):
+                if nn_dist <= local_floor or dot["support"] >= 2:
+                    keep.append(dot)
+            if len(keep) >= max(4, len(dots) // 2):
+                dots = keep
 
     # Keep all remaining dots; Braille pages can legitimately contain many cells.
 
@@ -554,11 +612,15 @@ def segment_braille_cells(rows, spacing, img_shape):
                 row_distances = np.abs(y_centers - cy)
                 r = int(np.argmin(row_distances))
                     
-                dot_matrix[r, col] = 1
+                # compute per-dot geometric confidence and only accept strong dot placements
                 column_score = 1.0 - (min(abs(cx - left_col_x), abs(cx - right_col_x)) / max(cell_width * 0.5, 1.0))
                 row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
                 structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
-                dot_confidences.append(float(max(0.15, min(1.0, (column_score + row_score + structure_score) / 3.0))))
+                d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
+                # Only mark a dot in the matrix if its geometric confidence exceeds a minimum
+                if d_conf >= 0.45:
+                    dot_matrix[r, col] = 1
+                dot_confidences.append(d_conf)
                 
             # Construct standard 6-bit code
             binary_code = 0
@@ -571,9 +633,9 @@ def segment_braille_cells(rows, spacing, img_shape):
             
             avg_conf = np.mean(dot_confidences) if dot_confidences else 1.0
             if len(cell_dots) == 1:
-                avg_conf *= 0.7
+                avg_conf *= 0.70
             elif len(cell_dots) == 2:
-                avg_conf *= 0.88
+                avg_conf *= 0.90
             if len(cell_dots) >= 4:
                 avg_conf = min(0.96, avg_conf + 0.02)
             
@@ -687,7 +749,8 @@ def decode_braille_sequence(cells, scan_mode):
             code = cell["binary"]
             conf = cell["confidence"]
             
-            if conf < 0.65:
+            # Require a modest per-cell confidence; weak cells remain marked uncertain
+            if conf < 0.58:
                 row_text.append("[UNCERTAIN_CELL]")
                 cell["char"] = "?"
                 i += 1
