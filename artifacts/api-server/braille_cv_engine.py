@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import base64
 import math
+import os
 
 # ─── COMPLETE DETERMINISTIC UEB DECODING DICTIONARIES ───────────────────────
 # Maps 6-bit binary integers (0-63) to their corresponding UEB characters.
@@ -686,7 +687,7 @@ def decode_braille_sequence(cells, scan_mode):
             code = cell["binary"]
             conf = cell["confidence"]
             
-            if conf < 0.60:
+            if conf < 0.65:
                 row_text.append("[UNCERTAIN_CELL]")
                 cell["char"] = "?"
                 i += 1
@@ -752,13 +753,27 @@ def generate_debug_overlay(img, dots, cells):
     """
     overlay = img.copy()
     
-    # 1. Draw detected dots (Solid Green circles)
+    # 1. Draw detected dots (Solid Green circles) and annotate confidences
     for d in dots:
         cx, cy = d["center"]
-        r = d["radius"]
-        cv2.circle(overlay, (cx, cy), r + 2, (74, 222, 128), -1) # Glowing Emerald fill
-        cv2.circle(overlay, (cx, cy), r + 4, (52, 211, 153), 1)  # outer ring
-        
+        r = d.get("radius", 6)
+        conf = float(d.get("confidence", 1.0))
+
+        # Main dot marker
+        cv2.circle(overlay, (cx, cy), int(r) + 2, (74, 222, 128), -1) # fill
+        cv2.circle(overlay, (cx, cy), int(r) + 4, (52, 211, 153), 1)  # outer ring
+
+        # Uncertain dots highlighted with a red halo and small cross
+        if conf < 0.65:
+            cv2.circle(overlay, (cx, cy), int(r) + 7, (20, 20, 220), 2)
+            cv2.line(overlay, (cx - 6, cy - 6), (cx + 6, cy + 6), (0, 0, 200), 1)
+            cv2.line(overlay, (cx - 6, cy + 6), (cx + 6, cy - 6), (0, 0, 200), 1)
+
+        # Draw confidence as small percentage nearby
+        conf_text = f"{int(conf * 100)}%"
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(overlay, conf_text, (cx + int(r) + 6, cy - int(r) - 6), font, 0.35, (255, 255, 255), 1, cv2.LINE_AA)
+
     # Blend dots overlay
     cv2.addWeighted(overlay, 0.45, img, 0.55, 0, img)
     
@@ -811,11 +826,20 @@ def generate_dot_overlay(img, dots):
         cx, cy = d["center"]
         r = int(max(3, min(10, round(d.get("radius", median_radius) * 0.85))))
         thickness = 1
+        conf = float(d.get("confidence", 1.0))
+
+        # Standard dot render
         cv2.circle(overlay, (cx, cy), r, (74, 222, 128), -1)
         cv2.circle(overlay, (cx, cy), r + thickness, (52, 211, 153), thickness)
 
-        if d.get("circularity", 0.0) < 0.72:
-            cv2.circle(overlay, (cx, cy), r + 1, (59, 130, 246), 1)
+        # Annotate uncertain dots
+        if conf < 0.65:
+            cv2.circle(overlay, (cx, cy), r + 6, (0, 0, 200), 2)
+            cv2.putText(overlay, f"{int(conf*100)}%", (cx + r + 4, cy - r - 4), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (255,255,255), 1, cv2.LINE_AA)
+        else:
+            # small circularity hint for borderline shapes
+            if d.get("circularity", 0.0) < 0.72:
+                cv2.circle(overlay, (cx, cy), r + 1, (59, 130, 246), 1)
 
     cv2.addWeighted(overlay, 0.42, img, 0.58, 0, img)
     _, buffer = cv2.imencode(".png", img)
@@ -882,6 +906,18 @@ def execute_braille_cv_pipeline(base64_img, scan_mode="auto"):
 
         # 5. TEMPLATE OVERRIDE: A-Z Alphabet Card (az_card.png)
         is_az = (scan_mode == "az")
+
+        # Control whether hard template overrides are allowed. Default: disabled.
+        # Set environment variable `ENABLE_TEMPLATE_OVERRIDES=1` to re-enable them.
+        allow_template_overrides = os.getenv("ENABLE_TEMPLATE_OVERRIDES", "0") == "1"
+
+        # Disable quick-template, character-first branches by default so the
+        # engine always uses a dot-first, geometry-driven pipeline.
+        is_nemeth = is_nemeth and allow_template_overrides
+        is_music = is_music and allow_template_overrides
+        is_computer = is_computer and allow_template_overrides
+        is_scio = is_scio and allow_template_overrides
+        is_az = is_az and allow_template_overrides
 
         if is_nemeth:
             raw_text = "2 + 3 = 5\nx^2"
