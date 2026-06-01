@@ -1,0 +1,17 @@
+[
+  {
+    "file": "computer_eight_dot_braille.png",
+    "status": "ok",
+    "out": "A:\\BrailleVision Hackathon\\Neuro-Dot\\artifacts\\api-server\\debug\\computer_eight_dot_braille_result.json"
+  },
+  {
+    "file": "music_braille_score.png",
+    "status": "ok",
+    "out": "A:\\BrailleVision Hackathon\\Neuro-Dot\\artifacts\\api-server\\debug\\music_braille_score_result.json"
+  },
+  {
+    "file": "nemeth_math_braille.png",
+    "status": "ok",
+    "out": "A:\\BrailleVision Hackathon\\Neuro-Dot\\artifacts\\api-server\\debug\\nemeth_math_braille_result.json"
+  }
+]

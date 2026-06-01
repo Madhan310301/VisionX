@@ -1,0 +1,3260 @@
+{
+  "rawText": "[UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL],[UNKNOWN][UNKNOWN][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNKNOWN][UNCERTAIN_CELL][UNCERTAIN_CELL]r[UNCERTAIN_CELL]uc,[UNCERTAIN_CELL]hs[UNKNOWN];f([UNCERTAIN_CELL]g.[UNCERTAIN_CELL][UNKNOWN][UNCERTAIN_CELL]kc[UNKNOWN][UNKNOWN][UNCERTAIN_CELL]v;[UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNKNOWN]s[UNKNOWN];[UNCERTAIN_CELL]f[UNKNOWN];[UNCERTAIN_CELL][UNCERTAIN_CELL]\"[UNCERTAIN_CELL]l[UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL][UNCERTAIN_CELL]",
+  "confidence": 0.7839936079081617,
+  "debugDots": [
+    {
+      "x": 773,
+      "y": 690,
+      "radius": 4,
+      "confidence": 0.9247985466222429
+    },
+    {
+      "x": 216,
+      "y": 763,
+      "radius": 4,
+      "confidence": 0.9227272726407235
+    },
+    {
+      "x": 438,
+      "y": 287,
+      "radius": 4,
+      "confidence": 0.9044209707222483
+    },
+    {
+      "x": 585,
+      "y": 215,
+      "radius": 4,
+      "confidence": 0.8982491906543908
+    },
+    {
+      "x": 1011,
+      "y": 699,
+      "radius": 4,
+      "confidence": 0.8867595835457188
+    },
+    {
+      "x": 301,
+      "y": 636,
+      "radius": 4,
+      "confidence": 0.8867595726417237
+    },
+    {
+      "x": 300,
+      "y": 282,
+      "radius": 4,
+      "confidence": 0.8839798310353423
+    },
+    {
+      "x": 1020,
+      "y": 579,
+      "radius": 4,
+      "confidence": 0.8826102797989687
+    },
+    {
+      "x": 772,
+      "y": 673,
+      "radius": 4,
+      "confidence": 0.8778024160351561
+    },
+    {
+      "x": 908,
+      "y": 873,
+      "radius": 5,
+      "confidence": 0.877781623699805
+    },
+    {
+      "x": 314,
+      "y": 716,
+      "radius": 4,
+      "confidence": 0.8777816141434455
+    },
+    {
+      "x": 232,
+      "y": 817,
+      "radius": 4,
+      "confidence": 0.8758946547977788
+    },
+    {
+      "x": 315,
+      "y": 512,
+      "radius": 4,
+      "confidence": 0.8758946496539216
+    },
+    {
+      "x": 320,
+      "y": 830,
+      "radius": 4,
+      "confidence": 0.8758946496539216
+    },
+    {
+      "x": 347,
+      "y": 344,
+      "radius": 4,
+      "confidence": 0.8726869015740993
+    },
+    {
+      "x": 905,
+      "y": 643,
+      "radius": 4,
+      "confidence": 0.8714646546573355
+    },
+    {
+      "x": 482,
+      "y": 336,
+      "radius": 4,
+      "confidence": 0.8714646463829057
+    },
+    {
+      "x": 844,
+      "y": 571,
+      "radius": 4,
+      "confidence": 0.8636121874247382
+    },
+    {
+      "x": 32,
+      "y": 416,
+      "radius": 6,
+      "confidence": 0.8590505217759614
+    },
+    {
+      "x": 213,
+      "y": 550,
+      "radius": 6,
+      "confidence": 0.8584266785089893
+    },
+    {
+      "x": 294,
+      "y": 327,
+      "radius": 4,
+      "confidence": 0.8575382926580901
+    },
+    {
+      "x": 844,
+      "y": 738,
+      "radius": 4,
+      "confidence": 0.8575382908489096
+    },
+    {
+      "x": 624,
+      "y": 797,
+      "radius": 4,
+      "confidence": 0.8573716100878628
+    },
+    {
+      "x": 582,
+      "y": 1,
+      "radius": 4,
+      "confidence": 0.8572568253872993
+    },
+    {
+      "x": 567,
+      "y": 275,
+      "radius": 4,
+      "confidence": 0.8554386556255748
+    },
+    {
+      "x": 886,
+      "y": 801,
+      "radius": 6,
+      "confidence": 0.8505718687003124
+    },
+    {
+      "x": 358,
+      "y": 478,
+      "radius": 4,
+      "confidence": 0.8464979936885056
+    },
+    {
+      "x": 57,
+      "y": 455,
+      "radius": 4,
+      "confidence": 0.8464523193398272
+    },
+    {
+      "x": 94,
+      "y": 793,
+      "radius": 4,
+      "confidence": 0.8458348538463678
+    },
+    {
+      "x": 176,
+      "y": 614,
+      "radius": 4,
+      "confidence": 0.8458348538463678
+    },
+    {
+      "x": 335,
+      "y": 495,
+      "radius": 4,
+      "confidence": 0.8458348538463678
+    },
+    {
+      "x": 688,
+      "y": 741,
+      "radius": 4,
+      "confidence": 0.8458348514740116
+    },
+    {
+      "x": 996,
+      "y": 552,
+      "radius": 4,
+      "confidence": 0.8458333595003218
+    },
+    {
+      "x": 140,
+      "y": 578,
+      "radius": 5,
+      "confidence": 0.8450689278640103
+    },
+    {
+      "x": 239,
+      "y": 712,
+      "radius": 4,
+      "confidence": 0.8432702603026421
+    },
+    {
+      "x": 841,
+      "y": 792,
+      "radius": 4,
+      "confidence": 0.8432702603026421
+    },
+    {
+      "x": 1007,
+      "y": 418,
+      "radius": 4,
+      "confidence": 0.8432702460073699
+    },
+    {
+      "x": 306,
+      "y": 388,
+      "radius": 4,
+      "confidence": 0.8422064092406572
+    },
+    {
+      "x": 553,
+      "y": 317,
+      "radius": 4,
+      "confidence": 0.842206398844018
+    },
+    {
+      "x": 912,
+      "y": 762,
+      "radius": 4,
+      "confidence": 0.842206398844018
+    },
+    {
+      "x": 1014,
+      "y": 429,
+      "radius": 4,
+      "confidence": 0.8409528325713307
+    },
+    {
+      "x": 731,
+      "y": 355,
+      "radius": 4,
+      "confidence": 0.8409528324259502
+    },
+    {
+      "x": 974,
+      "y": 908,
+      "radius": 4,
+      "confidence": 0.8408588769098712
+    },
+    {
+      "x": 94,
+      "y": 807,
+      "radius": 4,
+      "confidence": 0.8399544390775809
+    },
+    {
+      "x": 735,
+      "y": 707,
+      "radius": 4,
+      "confidence": 0.8399544390775809
+    },
+    {
+      "x": 882,
+      "y": 420,
+      "radius": 4,
+      "confidence": 0.8399544390775809
+    },
+    {
+      "x": 888,
+      "y": 750,
+      "radius": 4,
+      "confidence": 0.838463266193888
+    },
+    {
+      "x": 292,
+      "y": 629,
+      "radius": 4,
+      "confidence": 0.8384632641280465
+    },
+    {
+      "x": 939,
+      "y": 407,
+      "radius": 4,
+      "confidence": 0.8384162108653561
+    },
+    {
+      "x": 328,
+      "y": 843,
+      "radius": 4,
+      "confidence": 0.8323187004717595
+    },
+    {
+      "x": 193,
+      "y": 533,
+      "radius": 4,
+      "confidence": 0.8323186919600186
+    },
+    {
+      "x": 326,
+      "y": 666,
+      "radius": 4,
+      "confidence": 0.8323186919600186
+    },
+    {
+      "x": 433,
+      "y": 221,
+      "radius": 4,
+      "confidence": 0.8323186919600186
+    },
+    {
+      "x": 103,
+      "y": 781,
+      "radius": 4,
+      "confidence": 0.8296832105416951
+    },
+    {
+      "x": 541,
+      "y": 801,
+      "radius": 4,
+      "confidence": 0.8253767570749099
+    },
+    {
+      "x": 189,
+      "y": 737,
+      "radius": 4,
+      "confidence": 0.8253767416572696
+    },
+    {
+      "x": 170,
+      "y": 629,
+      "radius": 6,
+      "confidence": 0.8253767416572696
+    },
+    {
+      "x": 752,
+      "y": 871,
+      "radius": 6,
+      "confidence": 0.823659318531025
+    },
+    {
+      "x": 240,
+      "y": 267,
+      "radius": 11,
+      "confidence": 0.8236487064153388
+    },
+    {
+      "x": 151,
+      "y": 628,
+      "radius": 4,
+      "confidence": 0.8202139662830029
+    },
+    {
+      "x": 347,
+      "y": 229,
+      "radius": 4,
+      "confidence": 0.8202020279127863
+    },
+    {
+      "x": 236,
+      "y": 334,
+      "radius": 4,
+      "confidence": 0.819298392886541
+    },
+    {
+      "x": 1005,
+      "y": 404,
+      "radius": 4,
+      "confidence": 0.817960695264055
+    },
+    {
+      "x": 93,
+      "y": 743,
+      "radius": 5,
+      "confidence": 0.8158206327678799
+    },
+    {
+      "x": 107,
+      "y": 676,
+      "radius": 7,
+      "confidence": 0.8149579882315048
+    },
+    {
+      "x": 109,
+      "y": 618,
+      "radius": 4,
+      "confidence": 0.8149579882315048
+    },
+    {
+      "x": 123,
+      "y": 262,
+      "radius": 6,
+      "confidence": 0.8146202935146012
+    },
+    {
+      "x": 163,
+      "y": 575,
+      "radius": 5,
+      "confidence": 0.8126834365935457
+    },
+    {
+      "x": 832,
+      "y": 578,
+      "radius": 4,
+      "confidence": 0.8092187632778012
+    },
+    {
+      "x": 639,
+      "y": 835,
+      "radius": 4,
+      "confidence": 0.8085181428902574
+    },
+    {
+      "x": 869,
+      "y": 283,
+      "radius": 4,
+      "confidence": 0.8053268717294714
+    },
+    {
+      "x": 857,
+      "y": 895,
+      "radius": 6,
+      "confidence": 0.7971879135144501
+    },
+    {
+      "x": 675,
+      "y": 714,
+      "radius": 4,
+      "confidence": 0.7964954112902356
+    },
+    {
+      "x": 761,
+      "y": 396,
+      "radius": 4,
+      "confidence": 0.7964954112902356
+    },
+    {
+      "x": 829,
+      "y": 689,
+      "radius": 6,
+      "confidence": 0.7906717112042134
+    },
+    {
+      "x": 293,
+      "y": 235,
+      "radius": 6,
+      "confidence": 0.7814778519053369
+    },
+    {
+      "x": 1019,
+      "y": 595,
+      "radius": 6,
+      "confidence": 0.7805637259986428
+    },
+    {
+      "x": 77,
+      "y": 704,
+      "radius": 4,
+      "confidence": 0.7805362701730169
+    },
+    {
+      "x": 86,
+      "y": 275,
+      "radius": 4,
+      "confidence": 0.7783402209173513
+    },
+    {
+      "x": 301,
+      "y": 456,
+      "radius": 4,
+      "confidence": 0.777484694129652
+    },
+    {
+      "x": 744,
+      "y": 635,
+      "radius": 5,
+      "confidence": 0.77435275056413
+    },
+    {
+      "x": 413,
+      "y": 310,
+      "radius": 4,
+      "confidence": 0.772283996990162
+    },
+    {
+      "x": 224,
+      "y": 827,
+      "radius": 4,
+      "confidence": 0.7703164059084023
+    },
+    {
+      "x": 1015,
+      "y": 474,
+      "radius": 4,
+      "confidence": 0.7648265049708362
+    },
+    {
+      "x": 933,
+      "y": 227,
+      "radius": 4,
+      "confidence": 0.7648265049708362
+    },
+    {
+      "x": 80,
+      "y": 689,
+      "radius": 6,
+      "confidence": 0.7645014126934608
+    },
+    {
+      "x": 123,
+      "y": 511,
+      "radius": 6,
+      "confidence": 0.763334481739412
+    },
+    {
+      "x": 835,
+      "y": 821,
+      "radius": 4,
+      "confidence": 0.7629588009633504
+    },
+    {
+      "x": 91,
+      "y": 714,
+      "radius": 4,
+      "confidence": 0.7629588009633504
+    },
+    {
+      "x": 133,
+      "y": 563,
+      "radius": 7,
+      "confidence": 0.7607194575766634
+    },
+    {
+      "x": 202,
+      "y": 828,
+      "radius": 4,
+      "confidence": 0.7599925619064557
+    },
+    {
+      "x": 89,
+      "y": 540,
+      "radius": 6,
+      "confidence": 0.753516904254865
+    },
+    {
+      "x": 168,
+      "y": 365,
+      "radius": 4,
+      "confidence": 0.7502001944502971
+    },
+    {
+      "x": 72,
+      "y": 423,
+      "radius": 6,
+      "confidence": 0.7500369606007603
+    },
+    {
+      "x": 31,
+      "y": 670,
+      "radius": 7,
+      "confidence": 0.7475984794679096
+    },
+    {
+      "x": 223,
+      "y": 442,
+      "radius": 8,
+      "confidence": 0.7469625255315636
+    },
+    {
+      "x": 842,
+      "y": 776,
+      "radius": 6,
+      "confidence": 0.7452155639828631
+    },
+    {
+      "x": 836,
+      "y": 534,
+      "radius": 4,
+      "confidence": 0.7433080797922875
+    },
+    {
+      "x": 433,
+      "y": 736,
+      "radius": 4,
+      "confidence": 0.7419766758525641
+    },
+    {
+      "x": 349,
+      "y": 450,
+      "radius": 6,
+      "confidence": 0.7408248305097855
+    },
+    {
+      "x": 40,
+      "y": 399,
+      "radius": 7,
+      "confidence": 0.7408248185579438
+    },
+    {
+      "x": 111,
+      "y": 771,
+      "radius": 6,
+      "confidence": 0.7398388448637861
+    },
+    {
+      "x": 725,
+      "y": 319,
+      "radius": 4,
+      "confidence": 0.7398388372977943
+    },
+    {
+      "x": 861,
+      "y": 235,
+      "radius": 4,
+      "confidence": 0.7398388372977943
+    },
+    {
+      "x": 331,
+      "y": 366,
+      "radius": 5,
+      "confidence": 0.7355085664991405
+    },
+    {
+      "x": 183,
+      "y": 574,
+      "radius": 8,
+      "confidence": 0.7345937368947738
+    },
+    {
+      "x": 749,
+      "y": 728,
+      "radius": 6,
+      "confidence": 0.7318737709937545
+    },
+    {
+      "x": 875,
+      "y": 452,
+      "radius": 5,
+      "confidence": 0.7298131185487868
+    },
+    {
+      "x": 522,
+      "y": 308,
+      "radius": 4,
+      "confidence": 0.7256046329210497
+    },
+    {
+      "x": 251,
+      "y": 184,
+      "radius": 6,
+      "confidence": 0.7239984905650985
+    },
+    {
+      "x": 1,
+      "y": 526,
+      "radius": 4,
+      "confidence": 0.7207940931738763
+    },
+    {
+      "x": 610,
+      "y": 866,
+      "radius": 5,
+      "confidence": 0.7167188809617928
+    },
+    {
+      "x": 652,
+      "y": 830,
+      "radius": 6,
+      "confidence": 0.7158568329121732
+    },
+    {
+      "x": 30,
+      "y": 180,
+      "radius": 6,
+      "confidence": 0.7126537792355527
+    },
+    {
+      "x": 781,
+      "y": 774,
+      "radius": 6,
+      "confidence": 0.7106922624086679
+    },
+    {
+      "x": 630,
+      "y": 741,
+      "radius": 4,
+      "confidence": 0.7090122197914496
+    },
+    {
+      "x": 378,
+      "y": 341,
+      "radius": 6,
+      "confidence": 0.6987331465064639
+    },
+    {
+      "x": 10,
+      "y": 506,
+      "radius": 10,
+      "confidence": 0.6987193942451466
+    },
+    {
+      "x": 453,
+      "y": 798,
+      "radius": 6,
+      "confidence": 0.69482682096179
+    },
+    {
+      "x": 183,
+      "y": 797,
+      "radius": 4,
+      "confidence": 0.692045468503111
+    },
+    {
+      "x": 996,
+      "y": 427,
+      "radius": 6,
+      "confidence": 0.688190165978456
+    },
+    {
+      "x": 870,
+      "y": 533,
+      "radius": 6,
+      "confidence": 0.677855473821795
+    },
+    {
+      "x": 895,
+      "y": 608,
+      "radius": 7,
+      "confidence": 0.6699853291073894
+    },
+    {
+      "x": 38,
+      "y": 476,
+      "radius": 4,
+      "confidence": 0.6662308972294316
+    },
+    {
+      "x": 317,
+      "y": 459,
+      "radius": 6,
+      "confidence": 0.6420551647194987
+    },
+    {
+      "x": 780,
+      "y": 397,
+      "radius": 4,
+      "confidence": 0.6288474407771745
+    },
+    {
+      "x": 105,
+      "y": 729,
+      "radius": 6,
+      "confidence": 0.615256235078452
+    }
+  ],
+  "cellDebug": [
+    {
+      "bbox": [
+        576,
+        -5,
+        17,
+        16
+      ],
+      "binary": 2,
+      "confidence": 0.7193333333333322,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          582,
+          1
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        24,
+        173,
+        17,
+        41
+      ],
+      "binary": 1,
+      "confidence": 0.638298064254586,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          30,
+          180
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        245,
+        177,
+        17,
+        41
+      ],
+      "binary": 1,
+      "confidence": 0.6382980642545856,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          251,
+          184
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        287,
+        228,
+        17,
+        41
+      ],
+      "binary": 4,
+      "confidence": 0.6786826796392019,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          293,
+          235
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        341,
+        222,
+        17,
+        41
+      ],
+      "binary": 4,
+      "confidence": 0.6657709536839975,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          347,
+          229
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        427,
+        214,
+        17,
+        41
+      ],
+      "binary": 2,
+      "confidence": 0.7144382284382288,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          433,
+          221
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        579,
+        208,
+        17,
+        41
+      ],
+      "binary": 2,
+      "confidence": 0.6365422114117755,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          585,
+          215
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        855,
+        228,
+        17,
+        41
+      ],
+      "binary": 4,
+      "confidence": 0.6786826796392001,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          861,
+          235
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        927,
+        220,
+        17,
+        41
+      ],
+      "binary": 2,
+      "confidence": 0.6463324212019853,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          933,
+          227
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        80,
+        268,
+        17,
+        48
+      ],
+      "binary": 1,
+      "confidence": 0.6551021353228711,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          86,
+          275
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        117,
+        255,
+        17,
+        48
+      ],
+      "binary": 1,
+      "confidence": 0.6131417545665038,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          123,
+          262
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        234,
+        260,
+        17,
+        48
+      ],
+      "binary": 1,
+      "confidence": 0.6680684332390014,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          240,
+          267
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        288,
+        275,
+        17,
+        56
+      ],
+      "binary": 6,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          300,
+          282
+        ],
+        [
+          294,
+          327
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        407,
+        280,
+        36,
+        48
+      ],
+      "binary": 20,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          438,
+          287
+        ],
+        [
+          413,
+          310
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        516,
+        268,
+        56,
+        53
+      ],
+      "binary": 44,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          567,
+          275
+        ],
+        [
+          553,
+          317
+        ],
+        [
+          522,
+          308
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        719,
+        312,
+        17,
+        48
+      ],
+      "binary": 4,
+      "confidence": 0.6454974701998101,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          725,
+          319
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        863,
+        276,
+        17,
+        48
+      ],
+      "binary": 2,
+      "confidence": 0.7069673269873927,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          869,
+          283
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        162,
+        358,
+        17,
+        23
+      ],
+      "binary": 4,
+      "confidence": 0.6024715719063541,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          168,
+          365
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        230,
+        327,
+        17,
+        23
+      ],
+      "binary": 1,
+      "confidence": 0.671778985507246,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          236,
+          334
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        325,
+        334,
+        58,
+        36
+      ],
+      "binary": 22,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          347,
+          344
+        ],
+        [
+          331,
+          366
+        ],
+        [
+          378,
+          341
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        476,
+        329,
+        17,
+        23
+      ],
+      "binary": 1,
+      "confidence": 0.6773879598662211,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          482,
+          336
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        725,
+        348,
+        17,
+        23
+      ],
+      "binary": 4,
+      "confidence": 0.5519176421404671,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          731,
+          355
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        26,
+        392,
+        51,
+        67
+      ],
+      "binary": 23,
+      "confidence": 0.96,
+      "dotsDetected": 4,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          32,
+          416
+        ],
+        [
+          57,
+          455
+        ],
+        [
+          72,
+          423
+        ],
+        [
+          40,
+          399
+        ]
+      ],
+      "dots_detected": 4
+    },
+    {
+      "bbox": [
+        217,
+        435,
+        17,
+        53
+      ],
+      "binary": 4,
+      "confidence": 0.6025604178770129,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          223,
+          442
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        295,
+        381,
+        59,
+        82
+      ],
+      "binary": 37,
+      "confidence": 0.96,
+      "dotsDetected": 4,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          306,
+          388
+        ],
+        [
+          349,
+          450
+        ],
+        [
+          317,
+          459
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        755,
+        389,
+        30,
+        53
+      ],
+      "binary": 9,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          761,
+          396
+        ],
+        [
+          780,
+          397
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        869,
+        413,
+        18,
+        53
+      ],
+      "binary": 6,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          882,
+          420
+        ],
+        [
+          875,
+          452
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        933,
+        400,
+        17,
+        53
+      ],
+      "binary": 1,
+      "confidence": 0.6262648892238594,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          939,
+          407
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        990,
+        397,
+        29,
+        53
+      ],
+      "binary": 19,
+      "confidence": 0.96,
+      "dotsDetected": 4,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          1007,
+          418
+        ],
+        [
+          1014,
+          429
+        ],
+        [
+          1005,
+          404
+        ],
+        [
+          996,
+          427
+        ]
+      ],
+      "dots_detected": 4
+    },
+    {
+      "bbox": [
+        -4,
+        469,
+        48,
+        61
+      ],
+      "binary": 14,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          1,
+          526
+        ],
+        [
+          10,
+          506
+        ],
+        [
+          38,
+          476
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        83,
+        504,
+        45,
+        49
+      ],
+      "binary": 20,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          123,
+          511
+        ],
+        [
+          89,
+          540
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        187,
+        526,
+        17,
+        49
+      ],
+      "binary": 4,
+      "confidence": 0.8382068511198939,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          213,
+          550
+        ],
+        [
+          193,
+          533
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        309,
+        471,
+        54,
+        49
+      ],
+      "binary": 11,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          315,
+          512
+        ],
+        [
+          358,
+          478
+        ],
+        [
+          335,
+          495
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        830,
+        526,
+        45,
+        49
+      ],
+      "binary": 36,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          836,
+          534
+        ],
+        [
+          870,
+          533
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        1009,
+        467,
+        17,
+        49
+      ],
+      "binary": 1,
+      "confidence": 0.6044934630586793,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          1015,
+          474
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        127,
+        543,
+        91,
+        43
+      ],
+      "binary": 27,
+      "confidence": 0.96,
+      "dotsDetected": 5,
+      "dotMatrix": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          140,
+          578
+        ],
+        [
+          163,
+          575
+        ],
+        [
+          133,
+          563
+        ],
+        [
+          183,
+          574
+        ]
+      ],
+      "dots_detected": 4
+    },
+    {
+      "bbox": [
+        826,
+        564,
+        23,
+        43
+      ],
+      "binary": 18,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          844,
+          571
+        ],
+        [
+          832,
+          578
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        889,
+        601,
+        17,
+        43
+      ],
+      "binary": 4,
+      "confidence": 0.5983073078845181,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          895,
+          608
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        990,
+        545,
+        35,
+        54
+      ],
+      "binary": 49,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          1020,
+          579
+        ],
+        [
+          996,
+          552
+        ],
+        [
+          1019,
+          595
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        25,
+        663,
+        17,
+        46
+      ],
+      "binary": 4,
+      "confidence": 0.6568086093429711,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          31,
+          670
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        101,
+        611,
+        17,
+        69
+      ],
+      "binary": 5,
+      "confidence": 0.9534641906613351,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          107,
+          676
+        ],
+        [
+          109,
+          618
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        145,
+        607,
+        36,
+        46
+      ],
+      "binary": 9,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          176,
+          614
+        ],
+        [
+          170,
+          629
+        ],
+        [
+          151,
+          628
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        286,
+        622,
+        45,
+        48
+      ],
+      "binary": 35,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          301,
+          636
+        ],
+        [
+          292,
+          629
+        ],
+        [
+          326,
+          666
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        738,
+        628,
+        39,
+        49
+      ],
+      "binary": 34,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          772,
+          673
+        ],
+        [
+          744,
+          635
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        899,
+        636,
+        17,
+        46
+      ],
+      "binary": 2,
+      "confidence": 0.6581302190096008,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          905,
+          643
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        71,
+        682,
+        39,
+        65
+      ],
+      "binary": 39,
+      "confidence": 0.96,
+      "dotsDetected": 5,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          93,
+          743
+        ],
+        [
+          77,
+          704
+        ],
+        [
+          80,
+          689
+        ],
+        [
+          91,
+          714
+        ],
+        [
+          105,
+          729
+        ]
+      ],
+      "dots_detected": 5
+    },
+    {
+      "bbox": [
+        183,
+        730,
+        17,
+        45
+      ],
+      "binary": 4,
+      "confidence": 0.8270663555709884,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          216,
+          763
+        ],
+        [
+          189,
+          737
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        233,
+        705,
+        17,
+        45
+      ],
+      "binary": 2,
+      "confidence": 0.7049197750851344,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          239,
+          712
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        308,
+        709,
+        17,
+        45
+      ],
+      "binary": 2,
+      "confidence": 0.669866683724132,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          314,
+          716
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        427,
+        729,
+        17,
+        45
+      ],
+      "binary": 4,
+      "confidence": 0.6683030827307384,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          433,
+          736
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        624,
+        734,
+        17,
+        45
+      ],
+      "binary": 4,
+      "confidence": 0.6529869002727151,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          630,
+          741
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        669,
+        707,
+        24,
+        45
+      ],
+      "binary": 34,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          688,
+          741
+        ],
+        [
+          675,
+          714
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        729,
+        683,
+        49,
+        49
+      ],
+      "binary": 14,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          773,
+          690
+        ],
+        [
+          735,
+          707
+        ],
+        [
+          749,
+          728
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        823,
+        682,
+        26,
+        60
+      ],
+      "binary": 33,
+      "confidence": 0.96,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          844,
+          738
+        ],
+        [
+          829,
+          689
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        882,
+        743,
+        17,
+        45
+      ],
+      "binary": 4,
+      "confidence": 0.6976357297041531,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          912,
+          762
+        ],
+        [
+          888,
+          750
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        1005,
+        692,
+        17,
+        45
+      ],
+      "binary": 1,
+      "confidence": 0.6201228503024642,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          1011,
+          699
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        88,
+        764,
+        28,
+        54
+      ],
+      "binary": 11,
+      "confidence": 0.96,
+      "dotsDetected": 4,
+      "dotMatrix": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          94,
+          793
+        ],
+        [
+          94,
+          807
+        ],
+        [
+          103,
+          781
+        ],
+        [
+          111,
+          771
+        ]
+      ],
+      "dots_detected": 4
+    },
+    {
+      "bbox": [
+        177,
+        756,
+        60,
+        76
+      ],
+      "binary": 46,
+      "confidence": 0.96,
+      "dotsDetected": 5,
+      "dotMatrix": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          232,
+          817
+        ],
+        [
+          224,
+          827
+        ],
+        [
+          202,
+          828
+        ],
+        [
+          183,
+          797
+        ]
+      ],
+      "dots_detected": 4
+    },
+    {
+      "bbox": [
+        314,
+        823,
+        17,
+        54
+      ],
+      "binary": 4,
+      "confidence": 0.8031156518684817,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          320,
+          830
+        ],
+        [
+          328,
+          843
+        ]
+      ],
+      "dots_detected": 2
+    },
+    {
+      "bbox": [
+        447,
+        791,
+        17,
+        54
+      ],
+      "binary": 2,
+      "confidence": 0.7171953085627896,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          453,
+          798
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        535,
+        794,
+        17,
+        54
+      ],
+      "binary": 2,
+      "confidence": 0.6921269681281582,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          541,
+          801
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        618,
+        790,
+        39,
+        54
+      ],
+      "binary": 38,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "dot_centers": [
+        [
+          624,
+          797
+        ],
+        [
+          639,
+          835
+        ],
+        [
+          652,
+          830
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        775,
+        767,
+        17,
+        54
+      ],
+      "binary": 1,
+      "confidence": 0.6655976441003228,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          781,
+          774
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        829,
+        769,
+        18,
+        56
+      ],
+      "binary": 7,
+      "confidence": 0.96,
+      "dotsDetected": 3,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          841,
+          792
+        ],
+        [
+          835,
+          821
+        ],
+        [
+          842,
+          776
+        ]
+      ],
+      "dots_detected": 3
+    },
+    {
+      "bbox": [
+        880,
+        755,
+        37,
+        54
+      ],
+      "binary": 10,
+      "confidence": 0.8459036939412634,
+      "dotsDetected": 2,
+      "dotMatrix": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          886,
+          801
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        322,
+        836,
+        17,
+        48
+      ],
+      "binary": 1,
+      "confidence": 0.5292938856015783,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "bbox": [
+        604,
+        859,
+        17,
+        48
+      ],
+      "binary": 2,
+      "confidence": 0.6726306491724541,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          610,
+          866
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        746,
+        864,
+        17,
+        48
+      ],
+      "binary": 2,
+      "confidence": 0.7083479975988326,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          752,
+          871
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        851,
+        888,
+        17,
+        48
+      ],
+      "binary": 4,
+      "confidence": 0.6251475859703273,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          857,
+          895
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        902,
+        866,
+        17,
+        48
+      ],
+      "binary": 2,
+      "confidence": 0.689138667352713,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          908,
+          873
+        ]
+      ],
+      "dots_detected": 1
+    },
+    {
+      "bbox": [
+        968,
+        901,
+        17,
+        48
+      ],
+      "binary": 4,
+      "confidence": 0.6071988680216094,
+      "dotsDetected": 1,
+      "dotMatrix": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "dot_centers": [
+        [
+          974,
+          908
+        ]
+      ],
+      "dots_detected": 1
+    }
+  ],
+  "spacing": null
+}

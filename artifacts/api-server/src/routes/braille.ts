@@ -1,6 +1,6 @@
 import { Router, type IRouter } from "express";
 import { BrailleRuleCorrector } from "../corrections/brailleRuleCorrector";
-import { geminiModel } from "../lib/gemini";
+import { geminiModel, hasGemini } from "../lib/gemini";
 import {
   ProcessBrailleImageBody,
   CorrectBrailleTextBody,
@@ -568,9 +568,6 @@ router.post("/braille/correct", async (req, res): Promise<void> => {
     let correctionEngineUsed = "local-rules";
 
     // Try Gemini API first if configured and key is available
-    const apiKey = process.env.GEMINI_API_KEY;
-    const hasGemini = apiKey && apiKey !== "Your_Gemini_API_Key";
-
     if (hasGemini) {
       try {
         const systemPrompt = `You are a professional Braille language post-processor. You receive a decoded Braille text output (which may contain minor OCR character errors, digit slips, or spacing issues) and the target Braille system context.
