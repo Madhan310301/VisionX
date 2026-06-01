@@ -94,13 +94,21 @@ def preprocess_image(img):
     clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
     normalized = clahe.apply(gray)
     
-    # 3. Gaussian Blur with slightly larger kernel to suppress high-frequency moire grid lines completely
-    blurred = cv2.GaussianBlur(normalized, (9, 9), 0)
+    # 3. Gaussian Blur dynamically scaled to suppress moire without merging tiny close dots
+    h_img, w_img = normalized.shape[:2]
+    if min(w_img, h_img) < 500:
+        ksize = (3, 3)
+        block_size = 15
+    else:
+        ksize = (9, 9)
+        block_size = 31
+        
+    blurred = cv2.GaussianBlur(normalized, ksize, 0)
     
     # 4. Adaptive Thresholding (Mask A) - larger block size to reduce local noise
     thresh_adapt = cv2.adaptiveThreshold(
         blurred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, 
-        cv2.THRESH_BINARY_INV, 31, 5
+        cv2.THRESH_BINARY_INV, block_size, 5
     )
     
     # 5. Otsu Global Thresholding (Mask B)
@@ -205,18 +213,20 @@ def detect_dots(binary_img, gray_img=None):
         contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         # Gather stats to establish a dynamically scaled threshold
+        h_mask, w_mask = mask.shape[:2]
+        min_area_hard = 4 if min(w_mask, h_mask) < 500 else 16
         areas = []
         for cnt in contours:
             area = cv2.contourArea(cnt)
             # Ignore very small noise and extremely large blobs
-            if 16 <= area <= 1200:
+            if min_area_hard <= area <= 1200:
                 areas.append(area)
 
         if not areas:
             continue
 
         median_area = np.median(areas)
-        min_area = max(10, median_area * 0.24)
+        min_area = max(min_area_hard, median_area * 0.24)
         max_area = min(1400, median_area * 3.6)
 
         for cnt in contours:
@@ -230,8 +240,9 @@ def detect_dots(binary_img, gray_img=None):
 
             # Circularity check: C = 4*pi*area/perimeter^2
             circularity = (4 * np.pi * area) / (perimeter * perimeter)
-            # Require stronger circularity to reject texture specks
-            if circularity < 0.60:
+            # Require stronger circularity to reject texture specks, but handle pixelation of tiny dots
+            circ_thresh = 0.45 if min_area < 15 else 0.56
+            if circularity < circ_thresh:
                 continue
 
             # aspect ratio of bounding box (to remove flat creases or margins)
@@ -290,7 +301,7 @@ def detect_dots(binary_img, gray_img=None):
                 "support": 1,
             })
 
-    # --- Hough Circle Boost: detect strong circular candidates and merge/boost clusters ---
+    # --- Hough Circle Soft-Confirmation: detect circular candidates and gently boost confidence ---
     try:
         if gray_img is not None and len(clusters) > 0:
             g = gray_img.copy()
@@ -315,6 +326,7 @@ def detect_dots(binary_img, gray_img=None):
             )
 
             if circles is not None:
+                # Soft confirmation: Hough votes should increase confidence, not act as a hard gate.
                 circles = np.round(circles[0]).astype(int)
                 for (x, y, r) in circles:
                     # find nearest existing cluster
@@ -328,27 +340,37 @@ def detect_dots(binary_img, gray_img=None):
                             nearest_idx = idx
 
                     if nearest_idx is not None and nearest_dist <= max(6, clusters[nearest_idx]["radius"] * 1.4):
-                        # boost support and circularity for matched cluster
-                        clusters[nearest_idx]["support"] = max(clusters[nearest_idx]["support"], 2)
-                        clusters[nearest_idx]["circularity"] = max(clusters[nearest_idx]["circularity"], 0.85)
+                        # soft-boost: record a Hough confirmation score and nudge circularity modestly
+                        cluster = clusters[nearest_idx]
+                        cluster["hough_boost"] = max(cluster.get("hough_boost", 0.0), 0.12)
+                        cluster["circularity"] = max(cluster.get("circularity", 0.0), min(0.82, cluster.get("circularity", 0.0) + 0.06))
                     else:
-                        # add new high-confidence circular cluster
+                        # create a tentative Hough-only candidate but keep it conservative
                         clusters.append({
                             "center": (int(x), int(y)),
                             "radius": int(r),
                             "area": math.pi * (r ** 2),
-                            "circularity": 0.9,
-                            "support": 2,
+                            "circularity": 0.78,
+                            "support": 1,
+                            "hough_boost": 0.14,
                         })
     except Exception:
         # Non-fatal: if Hough fails, proceed with contour results
         pass
 
+    # Build per-cluster soft confidence (Hough contributes as a boost, not a hard gate)
     dots = []
     for cluster in clusters:
-        # require stronger circularity to auto-accept; otherwise need at least 2 supports
-        if cluster["support"] >= 2 or cluster["circularity"] >= 0.82:
-            cluster["confidence"] = min(1.0, 0.58 + 0.12 * cluster["support"] + cluster["circularity"] * 0.28)
+        support = float(cluster.get("support", 1))
+        circ = float(cluster.get("circularity", 0.6))
+        hough = float(cluster.get("hough_boost", 0.0))
+
+        # Base confidence tuned to be permissive; downstream decoder still marks low-confidence cells
+        conf = 0.50 + 0.10 * (support - 1.0) + 0.28 * circ + 0.18 * hough
+        cluster["confidence"] = float(max(0.0, min(1.0, conf)))
+
+        # Keep any cluster with a non-trivial soft confidence; do not hard-filter on support/circularity.
+        if cluster["confidence"] >= 0.40:
             dots.append(cluster)
 
     # Remove isolated false positives that do not belong to a Braille lattice.
@@ -369,12 +391,35 @@ def detect_dots(binary_img, gray_img=None):
             local_floor = max(median_radius * 3.5, float(np.percentile(nearest, 35)))
             keep = []
             for dot, nn_dist in zip(dots, nearest):
-                if nn_dist <= local_floor or dot["support"] >= 2:
+                # Preserve dots that are either locally dense, have multiple supports, or have Hough confirmation
+                if nn_dist <= local_floor or dot.get("support", 1) >= 2 or dot.get("hough_boost", 0.0) > 0.10:
                     keep.append(dot)
             if len(keep) >= max(4, len(dots) // 2):
                 dots = keep
 
     # Keep all remaining dots; Braille pages can legitimately contain many cells.
+
+    # Dynamic bimodal filter for printed templates (solid black dots vs hollow white circles)
+    if gray_img is not None and len(dots) > 8:
+        g = gray_img.copy()
+        if len(g.shape) == 3:
+            g = cv2.cvtColor(g, cv2.COLOR_BGR2GRAY)
+            
+        intensities = []
+        for d in dots:
+            cx, cy = d["center"]
+            patch = g[max(0, cy-1):min(g.shape[0], cy+2), max(0, cx-1):min(g.shape[1], cx+2)]
+            intensities.append(float(np.mean(patch)) if patch.size > 0 else 255.0)
+            
+        std_dev = float(np.std(intensities))
+        val_range = float(max(intensities) - min(intensities))
+        
+        if std_dev > 35.0 and val_range > 140.0:
+            filtered_dots = []
+            for d, val in zip(dots, intensities):
+                if val < 130.0:
+                    filtered_dots.append(d)
+            dots = filtered_dots
 
     return dots
 
@@ -605,22 +650,69 @@ def segment_braille_cells(rows, spacing, img_shape):
             dot_matrix = np.zeros((3, 2), dtype=int)
             dot_confidences = []
             
+            # Group dots by column
+            col_dots = [[], []]
             for d in cell_dots:
                 cx, cy = d["center"]
-                
                 col = 0 if abs(cx - left_col_x) <= abs(cx - right_col_x) else 1
-                row_distances = np.abs(y_centers - cy)
-                r = int(np.argmin(row_distances))
+                col_dots[col].append(d)
+
+            dot_matrix = np.zeros((3, 2), dtype=int)
+            dot_confidences = []
+            
+            for col in range(2):
+                dots_in_col = sorted(col_dots[col], key=lambda d: d["center"][1])
+                n_dots = len(dots_in_col)
+                
+                if n_dots == 0:
+                    continue
+                elif n_dots == 1:
+                    d = dots_in_col[0]
+                    cx, cy = d["center"]
+                    r = int(np.argmin(np.abs(y_centers - cy)))
                     
-                # compute per-dot geometric confidence and only accept strong dot placements
-                column_score = 1.0 - (min(abs(cx - left_col_x), abs(cx - right_col_x)) / max(cell_width * 0.5, 1.0))
-                row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
-                structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
-                d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
-                # Only mark a dot in the matrix if its geometric confidence exceeds a minimum
-                if d_conf >= 0.45:
-                    dot_matrix[r, col] = 1
-                dot_confidences.append(d_conf)
+                    column_score = 1.0 - (abs(cx - (left_col_x if col == 0 else right_col_x)) / max(cell_width * 0.5, 1.0))
+                    row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
+                    structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
+                    d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
+                    
+                    if d_conf >= 0.45:
+                        dot_matrix[r, col] = 1
+                    dot_confidences.append(d_conf)
+                elif n_dots == 2:
+                    # Choose best pair of distinct rows for these two Y coordinates
+                    cy1 = dots_in_col[0]["center"][1]
+                    cy2 = dots_in_col[1]["center"][1]
+                    
+                    dist_01 = abs(cy1 - y_centers[0]) + abs(cy2 - y_centers[1])
+                    dist_02 = abs(cy1 - y_centers[0]) + abs(cy2 - y_centers[2])
+                    dist_12 = abs(cy1 - y_centers[1]) + abs(cy2 - y_centers[2])
+                    
+                    best_pair = int(np.argmin([dist_01, dist_02, dist_12]))
+                    rows_selected = [0, 1] if best_pair == 0 else ([0, 2] if best_pair == 1 else [1, 2])
+                    
+                    for r, d in zip(rows_selected, dots_in_col):
+                        cx, cy = d["center"]
+                        column_score = 1.0 - (abs(cx - (left_col_x if col == 0 else right_col_x)) / max(cell_width * 0.5, 1.0))
+                        row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
+                        structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
+                        d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
+                        
+                        if d_conf >= 0.45:
+                            dot_matrix[r, col] = 1
+                        dot_confidences.append(d_conf)
+                elif n_dots >= 3:
+                    # Map to all 3 rows
+                    for r, d in enumerate(dots_in_col[:3]):
+                        cx, cy = d["center"]
+                        column_score = 1.0 - (abs(cx - (left_col_x if col == 0 else right_col_x)) / max(cell_width * 0.5, 1.0))
+                        row_score = 1.0 - (abs(cy - y_centers[r]) / max(cell_height * 0.5, 1.0))
+                        structure_score = 1.0 - min(1.0, abs(cy - row_y) / max(row_pitch, 1.0)) * 0.25
+                        d_conf = float(max(0.10, min(1.0, (column_score + row_score + structure_score) / 3.0)))
+                        
+                        if d_conf >= 0.45:
+                            dot_matrix[r, col] = 1
+                        dot_confidences.append(d_conf)
                 
             # Construct standard 6-bit code
             binary_code = 0
